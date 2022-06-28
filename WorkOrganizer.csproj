@@ -7,4 +7,40 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="logo_BGP.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UI\MVVM\Model\" />
+    <Folder Include="UI\MVVM\ViewModel\" />
+    <Folder Include="UI\MVVM\View\" />
+	<Folder Include="UI\MVVM\Themes\" />
+	<Folder Include="UI\"/>
+	  <Folder Include="UI\Icons" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="logo_BGP.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="UI\Icons\logo_BGP.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
