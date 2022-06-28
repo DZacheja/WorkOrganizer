@@ -42,5 +42,9 @@ namespace WorkOrganizer {
         private void CloseApplication_Button_Click(object sender, RoutedEventArgs e) {
             Application.Current.Shutdown();
         }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e) {
+            System.Diagnostics.Debug.WriteLine("Click!");
+        }
     }
 }

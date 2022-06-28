@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="logo_BGP.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.6">
       <PrivateAssets>all</PrivateAssets>
@@ -26,10 +22,7 @@
 
   <ItemGroup>
     <Folder Include="UI\MVVM\Model\" />
-    <Folder Include="UI\MVVM\ViewModel\" />
-    <Folder Include="UI\MVVM\View\" />
 	<Folder Include="UI\MVVM\Themes\" />
-	<Folder Include="UI\"/>
 	  <Folder Include="UI\Icons" />
   </ItemGroup>
 
