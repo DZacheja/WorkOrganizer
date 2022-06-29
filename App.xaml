@@ -9,12 +9,13 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="UI/Theme/MenuButtonTheme.xaml"/>
+                <ResourceDictionary Source="UI/Theme/LoginControl.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type viewModel:LoginPageModel}">
                 <view:LoginPageView/>
             </DataTemplate>
-            
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

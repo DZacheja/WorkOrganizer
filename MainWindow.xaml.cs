@@ -18,10 +18,18 @@ namespace WorkOrganizer {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
+        static RadioButton r;
         public MainWindow() {
             InitializeComponent();
+            r = (RadioButton)this.FindName("LoginButton");
+            System.Diagnostics.Debug.WriteLine("MainViewCreated!");
         }
 
+        public static void HideLogin() {
+            r.Visibility = Visibility.Collapsed;
+        }
+
+        
         private void Border_MouseDown(object sender, MouseButtonEventArgs e) {
             if (e.LeftButton == MouseButtonState.Pressed) {
                 DragMove();

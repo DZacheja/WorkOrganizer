@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows.Controls;
 
 namespace WorkOrganizer.UI.MVVM.View {
     /// <summary>
@@ -7,6 +8,7 @@ namespace WorkOrganizer.UI.MVVM.View {
     public partial class LoginPageView : UserControl {
         public LoginPageView() {
             InitializeComponent();
+            System.Diagnostics.Debug.WriteLine("LoginViewCreated!");
         }
     }
 }

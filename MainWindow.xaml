@@ -90,7 +90,8 @@
                     <RadioButton Content="Logowanie"
                                  Height="40"
                                  Style="{StaticResource MenuButtonTheme}"
-                                 Command="{Binding loginPageCommand}"/>
+                                 Command="{Binding loginPageCommand}"
+                                 x:Name="LoginButton"/>
                     <RadioButton Content="Przeglądanie"
                                  Height="40"
                                  Style="{StaticResource MenuButtonTheme}"/>
