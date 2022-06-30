@@ -3,19 +3,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:WorkOrganizer"
              xmlns:viewModel="clr-namespace:WorkOrganizer.UI.MVVM.ViewModel"
-             xmlns:view="clr-namespace:WorkOrganizer.UI.MVVM.View"
-             StartupUri="MainWindow.xaml">
+             xmlns:view="clr-namespace:WorkOrganizer.UI.MVVM.View">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="UI/Theme/MenuButtonTheme.xaml"/>
                 <ResourceDictionary Source="UI/Theme/LoginControl.xaml"/>
+                <ResourceDictionary Source="UI/Theme/CustomButton.xaml"/>
+                <ResourceDictionary Source="UI/Theme/TaskCardElement.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type viewModel:LoginPageModel}">
                 <view:LoginPageView/>
             </DataTemplate>
-
+            
+            <DataTemplate DataType="{x:Type viewModel:TaskViewModel}">
+                <view:TaskView/>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

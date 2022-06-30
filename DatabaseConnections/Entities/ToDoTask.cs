@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DatabaseConnection.Entities {
     public class ToDoTask {
         [Key]
-        public Guid ToDoTaskID { get; set; }
+        public int ToDoTaskID { get; set; }
 
         public string Content { get; set; }
 
@@ -16,10 +16,10 @@ namespace DatabaseConnection.Entities {
         public bool Status { get; set; }
 
         public WorkComponent Component { get; set; }
-        public Guid ComponentsId { get; set; }
+        public int ComponentsId { get; set; }
 
         public User Authors { get; set; }
-        public Guid AuthorsID { get; set; }
+        public int AuthorsID { get; set; }
 
 
     }

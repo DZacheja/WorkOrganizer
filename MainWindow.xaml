@@ -71,12 +71,17 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0"
-                    Background="#8C8577">
-                    <Image Width="140" Height="105"
+                    Background="White">
+                    <Border
+                        CornerRadius="30"
+                        BorderThickness="2"
+                        BorderBrush="Black">
+                    <Image VerticalAlignment="Stretch"
+                           HorizontalAlignment="Stretch"
                            RenderOptions.BitmapScalingMode="HighQuality"
-                           Margin="0,5,0,0"
-                           VerticalAlignment="Top"
+                           Margin="10,10,10,10"
                            Source="logo_BGP.png"/>
+                    </Border>
                     <Label Content="MENU"
                                FontSize="24"
                                VerticalAlignment="Bottom"
@@ -94,7 +99,9 @@
                                  x:Name="LoginButton"/>
                     <RadioButton Content="Przeglądanie"
                                  Height="40"
-                                 Style="{StaticResource MenuButtonTheme}"/>
+                                 Command="{Binding taskCommand}"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 x:Name="TestRadioButton"/>
                 </StackPanel>
             </Grid>
             <ContentControl Grid.Column="1"

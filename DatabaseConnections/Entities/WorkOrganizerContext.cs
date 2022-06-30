@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DatabaseConnection {
     public class WorkOrganizerContext : DbContext {
+
         public DbSet<Work> Works { get; set; }
         public DbSet<Principal> Principals { get; set; }
         public DbSet<Message> Messages { get; set; }
@@ -16,15 +17,11 @@ namespace DatabaseConnection {
         public DbSet<ToDoTask> Tasks { get; set; }
         public DbSet<User> Users { get; set; }
 
-
-        public WorkOrganizerContext(DbContextOptions<WorkOrganizerContext> options) : base(options) {
-
-        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            //optionsBuilder.UseNpgsql(@"Server=localhost;DatabaseWorkOrganizerDb;Port=5432;User Id=postgres;Password=admin");
+            optionsBuilder.UseNpgsql(@"Server=localhost;Database=DatabaseWorkOrganizerDb;Port=5432;User Id=postgres;Password=admin");
 
         }
-        protected override void OnModelCreating(ModelBuilder modelBuilder) {            
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
             //Users table
             modelBuilder.Entity<User>(us => {
                 us.HasMany(u => u.ToDoTasks)
@@ -35,11 +32,14 @@ namespace DatabaseConnection {
                 .WithOne(u => u.Authors)
                 .HasForeignKey(a => a.AuthorsId);
             });
+            //Message
 
             //Principals table
-            modelBuilder.Entity<Principal>().HasMany(w => w.Works)
-                .WithOne(w => w.Principals)
-                .HasForeignKey(p => p.PrincipalsId);
+            modelBuilder.Entity<Principal>(p => {
+                p.HasMany(w => w.Works)
+                    .WithOne(w => w.Principals)
+                    .HasForeignKey(p => p.PrincipalsId);
+            });
 
             //Works tabel
             modelBuilder.Entity<Work>().HasMany(w => w.Components)
@@ -54,6 +54,7 @@ namespace DatabaseConnection {
                 .HasForeignKey(wi => wi.WorkId)
                 );
 
+
             //ToDoTask
             modelBuilder.Entity<WorkComponent>(wc => {
                 wc.HasMany(w => w.Tasks)
@@ -63,8 +64,8 @@ namespace DatabaseConnection {
                 wc.HasMany(w => w.Messages)
                 .WithOne(m => m.WorkComponents)
                 .HasForeignKey(k => k.WorkComponentsId);
-            });
 
+            });
             modelBuilder.Entity<Message>().Property(w => w.Created).HasDefaultValueSql("now()");
         }
 

@@ -5,16 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WorkOrganizer.UI.MVVM.View"
              xmlns:loginModel="clr-namespace:WorkOrganizer.UI.MVVM.ViewModel"
-             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             FontFamily="Sitka Banner">
+             FontFamily="Sitka Banner"
+             Background="Transparent">
     <UserControl.DataContext>
         <loginModel:LoginPageModel/>
     </UserControl.DataContext>
-    <Border Margin="10">
-        <Grid Margin="10,0,-10,0"
-              Background="#F2D6BD">
+    <Border CornerRadius="20"
+            Background="#F2D6BD">
+        <Grid VerticalAlignment="Stretch"
+              HorizontalAlignment="Stretch">
             <Grid.RowDefinitions>
                 <RowDefinition Height="150"/>
                 <RowDefinition/>
@@ -31,50 +33,57 @@
                        FontWeight="SemiBold">
                 </Label>
             </Border>
-            <Grid Grid.Row="1"
-                  Background="#8C8577">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <TextBlock FontSize="20"
+            <Border Grid.Row="1"
+                        CornerRadius="20"
+                        VerticalAlignment="Stretch"
+                        Background="#8C8577"
+                        Margin="10,0,10,10"   
+                        HorizontalAlignment="Stretch">
+                <Grid Grid.Row="1"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock FontSize="20"
                            Text="Login:"
                            VerticalAlignment="Top"
                            HorizontalAlignment="Right"
                            Margin="0,10,0,0"
                            Grid.Row="0" Grid.Column="0" FontFamily="Sitka Banner">
 
-                </TextBlock>
-                <TextBox Grid.Row="0" Grid.Column="1"
+                    </TextBlock>
+                    <TextBox Grid.Row="0" Grid.Column="1"
                     VerticalAlignment="Top"
                          HorizontalAlignment="Stretch"
                          Height="30"
                          Style="{StaticResource LoginTextBox}"
                          Background="Gray"
                          Margin="10,10,30,0">
-                </TextBox>
-                <Border Grid.Column="2"
-                        CornerRadius="10"
-                        Background="#F2D6BD"
-                        Width="60"
-                        Height="30"
-                        Margin="0,10,10,10"
-                        BorderThickness="2"
-                        BorderBrush="DarkGoldenrod">
-                    <Button VerticalAlignment="Stretch"
+                    </TextBox>
+                    <Button Content="Zatwierdź"
+                        Command="{Binding Path=LogIntoDatabase}"
+                        Grid.Column="2"
+                        Foreground="Red"
+                        VerticalAlignment="Stretch"
                         HorizontalAlignment="Stretch"
-                            Background="Transparent"
-                            Content="Zatwierdź"
-                            BorderThickness="0"
-                            Command="{Binding Path=LogIntoDatabase}">
+                        Margin="5,10,5,0">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </Button.Resources>
+
                     </Button>
-                </Border>
-            </Grid>
+                </Grid>
+            </Border>
         </Grid>
     </Border>
 

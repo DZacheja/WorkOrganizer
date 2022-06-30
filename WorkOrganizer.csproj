@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Migrations\" />
     <Folder Include="UI\MVVM\Model\" />
 	<Folder Include="UI\MVVM\Themes\" />
 	  <Folder Include="UI\Icons" />

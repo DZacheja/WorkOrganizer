@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace DatabaseConnection.Entities {
     public class User {
         [Key]
-        public Guid UserID { get; set; }
+        public int UserID { get; set; }
 
         public string Name{ get; set; }
         public string Mail { get; set; }

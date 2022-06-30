@@ -1,9 +1,12 @@
-﻿using ModernDesign.Core;
+﻿using DatabaseConnection;
+using DatabaseConnection.Entities;
+using ModernDesign.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace WorkOrganizer.UI.MVVM.ViewModel {
@@ -40,9 +43,21 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             }
         }
 
-        private void LogInto() {
+        private async void LogInto() {
             System.Diagnostics.Debug.WriteLine("Można logować");
-            MainWindow.HideLogin();
+            var DatabaseContext = new WorkOrganizerContext();
+            var newUser = new User() {
+                Name = "Dammian",
+                Mail = "d.zacheja@bg-p.pl"
+            };
+            using (DatabaseContext) {
+                await DatabaseContext.Users.AddAsync(newUser);
+                if (await DatabaseContext.SaveChangesAsync() == 1) {
+                    ((MainWindow)Application.Current.MainWindow).TestRadioButton.Content = "Zmienono!";
+                } else {
+                    ((MainWindow)Application.Current.MainWindow).TestRadioButton.Content = "Nie Zmienono!";
+                }
+            }
         }
 
         private bool CanLogInto() {

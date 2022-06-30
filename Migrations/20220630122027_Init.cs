@@ -14,9 +14,9 @@ namespace WorkOrganizer.Migrations
                 name: "Principals",
                 columns: table => new
                 {
-                    PrincipalID = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    WorkId = table.Column<Guid>(type: "uuid", nullable: false)
+                    PrincipalID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -27,7 +27,8 @@ namespace WorkOrganizer.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    UserID = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Mail = table.Column<string>(type: "text", nullable: false)
                 },
@@ -53,12 +54,13 @@ namespace WorkOrganizer.Migrations
                 name: "Works",
                 columns: table => new
                 {
-                    WorkId = table.Column<Guid>(type: "uuid", nullable: false),
+                    WorkId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     ColorHTML = table.Column<string>(type: "text", nullable: false),
                     StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    PrincipalsId = table.Column<Guid>(type: "uuid", nullable: false)
+                    PrincipalsId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,9 +77,10 @@ namespace WorkOrganizer.Migrations
                 name: "WorkComponents",
                 columns: table => new
                 {
-                    ComponentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ComponentId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     WorkTypeId = table.Column<int>(type: "integer", nullable: false),
-                    WorkId = table.Column<Guid>(type: "uuid", nullable: false)
+                    WorkId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,11 +103,12 @@ namespace WorkOrganizer.Migrations
                 name: "Messages",
                 columns: table => new
                 {
-                    MessageId = table.Column<Guid>(type: "uuid", nullable: false),
+                    MessageId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Content = table.Column<string>(type: "text", nullable: false),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
-                    WorkComponentsId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AuthorsId = table.Column<Guid>(type: "uuid", nullable: false)
+                    WorkComponentsId = table.Column<int>(type: "integer", nullable: false),
+                    AuthorsId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,12 +131,13 @@ namespace WorkOrganizer.Migrations
                 name: "Tasks",
                 columns: table => new
                 {
-                    ToDoTaskID = table.Column<Guid>(type: "uuid", nullable: false),
+                    ToDoTaskID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Content = table.Column<string>(type: "text", nullable: false),
                     Deadline = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Status = table.Column<bool>(type: "boolean", nullable: false),
-                    ComponentsId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AuthorsID = table.Column<Guid>(type: "uuid", nullable: false)
+                    ComponentsId = table.Column<int>(type: "integer", nullable: false),
+                    AuthorsID = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {

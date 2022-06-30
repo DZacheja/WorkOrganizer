@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="WorkOrganizer.UI.MVVM.View.TaskView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WorkOrganizer.UI.MVVM.View"
+             xmlns:view="clr-namespace:WorkOrganizer.UI.MVVM.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Background="Gray">
+    <UserControl.DataContext>
+        <view:TaskViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <ListView ItemsSource="{Binding Tasks}"
+                  Background="Transparent"
+                  ItemContainerStyle="{StaticResource TaskCardElement}"/>
+    </Grid>
+</UserControl>

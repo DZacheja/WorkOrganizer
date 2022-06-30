@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace WorkOrganizer.Migrations
 {
     [DbContext(typeof(WorkOrganizerContext))]
-    [Migration("20220628131231_Init")]
+    [Migration("20220630122027_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,12 +26,14 @@ namespace WorkOrganizer.Migrations
 
             modelBuilder.Entity("DatabaseConnection.Entities.Message", b =>
                 {
-                    b.Property<Guid>("MessageId")
+                    b.Property<int>("MessageId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("AuthorsId")
-                        .HasColumnType("uuid");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MessageId"));
+
+                    b.Property<int>("AuthorsId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -42,8 +44,8 @@ namespace WorkOrganizer.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<Guid>("WorkComponentsId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("WorkComponentsId")
+                        .HasColumnType("integer");
 
                     b.HasKey("MessageId");
 
@@ -56,16 +58,15 @@ namespace WorkOrganizer.Migrations
 
             modelBuilder.Entity("DatabaseConnection.Entities.Principal", b =>
                 {
-                    b.Property<Guid>("PrincipalID")
+                    b.Property<int>("PrincipalID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PrincipalID"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<Guid>("WorkId")
-                        .HasColumnType("uuid");
 
                     b.HasKey("PrincipalID");
 
@@ -74,15 +75,17 @@ namespace WorkOrganizer.Migrations
 
             modelBuilder.Entity("DatabaseConnection.Entities.ToDoTask", b =>
                 {
-                    b.Property<Guid>("ToDoTaskID")
+                    b.Property<int>("ToDoTaskID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("AuthorsID")
-                        .HasColumnType("uuid");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ToDoTaskID"));
 
-                    b.Property<Guid>("ComponentsId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("AuthorsID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ComponentsId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -105,9 +108,11 @@ namespace WorkOrganizer.Migrations
 
             modelBuilder.Entity("DatabaseConnection.Entities.User", b =>
                 {
-                    b.Property<Guid>("UserID")
+                    b.Property<int>("UserID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserID"));
 
                     b.Property<string>("Mail")
                         .IsRequired()
@@ -124,9 +129,11 @@ namespace WorkOrganizer.Migrations
 
             modelBuilder.Entity("DatabaseConnection.Entities.Work", b =>
                 {
-                    b.Property<Guid>("WorkId")
+                    b.Property<int>("WorkId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("WorkId"));
 
                     b.Property<string>("ColorHTML")
                         .IsRequired()
@@ -139,8 +146,8 @@ namespace WorkOrganizer.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("PrincipalsId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("PrincipalsId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("timestamp with time zone");
@@ -154,12 +161,14 @@ namespace WorkOrganizer.Migrations
 
             modelBuilder.Entity("DatabaseConnection.Entities.WorkComponent", b =>
                 {
-                    b.Property<Guid>("ComponentId")
+                    b.Property<int>("ComponentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("WorkId")
-                        .HasColumnType("uuid");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ComponentId"));
+
+                    b.Property<int>("WorkId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("WorkTypeId")
                         .HasColumnType("integer");
