@@ -8,6 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="UI\MVVM\Model\**" />
+    <Compile Remove="UI\MVVM\Themes\**" />
+    <EmbeddedResource Remove="UI\MVVM\Model\**" />
+    <EmbeddedResource Remove="UI\MVVM\Themes\**" />
+    <None Remove="UI\MVVM\Model\**" />
+    <None Remove="UI\MVVM\Themes\**" />
+    <Page Remove="UI\MVVM\Model\**" />
+    <Page Remove="UI\MVVM\Themes\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="4.11.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.6" />
@@ -24,8 +35,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="UI\MVVM\Model\" />
-	<Folder Include="UI\MVVM\Themes\" />
 	  <Folder Include="UI\Icons" />
   </ItemGroup>
 

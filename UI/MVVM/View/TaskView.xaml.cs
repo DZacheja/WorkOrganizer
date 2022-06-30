@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,17 @@ namespace WorkOrganizer.UI.MVVM.View {
     public partial class TaskView : UserControl {
         public TaskView() {
             InitializeComponent();
+            ((INotifyCollectionChanged)tasksList.Items).CollectionChanged += ListView_CollectionChanged;
+            System.Diagnostics.Debug.WriteLine("Cosntructor in tak view   ---> " + tasksList.Items.Count);
+            var index = tasksList.Items.Count - 1;
+            var item = tasksList.Items.GetItemAt(index);
+            tasksList.ScrollIntoView(item);
+        }
+        private void ListView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
+            if (e.Action == NotifyCollectionChangedAction.Add) {
+                // scroll the new item into view   
+                tasksList.ScrollIntoView(e.NewItems[0]);
+            }
         }
     }
 }

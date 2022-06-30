@@ -17,15 +17,26 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
         public TaskViewModel() {
             dbContext = new WorkOrganizerContext();
             var tsk = dbContext.Tasks.Include(a => a.Authors)
-                .Include(x => x.Component).ThenInclude(x => x.Works).ToList();
+                .Include(x => x.Component).ThenInclude(x => x.Works)
+                .Include(x => x.Component).ThenInclude(x => x.WorkTypes)
+                .OrderByDescending(o => o.Deadline).ToList();
+
             Tasks = new ObservableCollection<ToDoTask>();
             foreach (var task in tsk) {
                 Tasks.Add(task);
             }
         }
 
-        private async void FillTaskObject() {
 
+        public void FilterByWorkAndWorkType(WorkType wt, Work w, Principal p) {
+            if (Tasks != null) {
+                var x = Tasks.Where(x => x.Component.Works.WorkId == w.WorkId).Where(y => y.Component.WorkTypeId == wt.Id).ToList();
+                Tasks.Clear();
+                foreach (var task in x) {
+                    Tasks.Add(task);
+                }
+
+            }
         }
     }
 }

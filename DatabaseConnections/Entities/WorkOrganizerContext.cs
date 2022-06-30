@@ -18,8 +18,8 @@ namespace DatabaseConnection {
         public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseNpgsql(@"Server=localhost;Database=DatabaseWorkOrganizerDb;Port=5432;User Id=postgres;Password=admin");
-
+            //optionsBuilder.UseNpgsql(@"Server=localhost;Database=DatabaseWorkOrganizerDb;Port=5432;User Id=postgres;Password=admin");
+            optionsBuilder.UseNpgsql(@"Server=127.0.0.1;Database=DatabaseWorkOrganizerDb;Port=5432;User Id=postgres;Password=admin");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             //Users table
@@ -55,7 +55,7 @@ namespace DatabaseConnection {
                 );
 
 
-            //ToDoTask
+            //Work Component
             modelBuilder.Entity<WorkComponent>(wc => {
                 wc.HasMany(w => w.Tasks)
                 .WithOne(t => t.Component)
@@ -66,6 +66,9 @@ namespace DatabaseConnection {
                 .HasForeignKey(k => k.WorkComponentsId);
 
             });
+
+            modelBuilder.Entity<ToDoTask>().Property(x => x.Status).HasDefaultValue(false);
+
             modelBuilder.Entity<Message>().Property(w => w.Created).HasDefaultValueSql("now()");
         }
 

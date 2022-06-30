@@ -97,7 +97,7 @@
                                  Style="{StaticResource MenuButtonTheme}"
                                  Command="{Binding loginPageCommand}"
                                  x:Name="LoginButton"/>
-                    <RadioButton Content="Przeglądanie"
+                    <RadioButton Content="Zadania"
                                  Height="40"
                                  Command="{Binding taskCommand}"
                                  Style="{StaticResource MenuButtonTheme}"
@@ -108,6 +108,49 @@
                                 Margin="10"
                                 Content="{Binding CurrentView}">
             </ContentControl>
+            <Grid Grid.Row="1"
+                  Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock VerticalAlignment="Top"
+                           HorizontalAlignment="Center"
+                           Text="Konfiguracja"
+                           FontSize="20"
+                           Foreground="Wheat"
+                           Margin="10"/>
+                <Border Grid.Row="1"
+                    VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            Background="#F2D6BD"
+                            CornerRadius="10">
+                    <StackPanel Margin="5">
+                        <TextBlock Text="Zleceniodwca" 
+                                   Margin="5"/>
+                        <ComboBox Margin="5"
+                                  ItemsSource="{Binding Principals}"
+                                  DisplayMemberPath="Name"
+                                  SelectedItem="{Binding SelectedPrincipal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Text="Robota" 
+                                   Margin="5"/>
+                        <ComboBox Margin="5"
+                                  ItemsSource="{Binding PrincipalsWork}"
+                                  DisplayMemberPath="Name"
+                                  SelectedItem="{Binding SelectedPrincipalWork, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Text="Rodzaj" 
+                                   Margin="5"/>
+                        <ComboBox Margin="5"
+                                  ItemsSource="{Binding WorkTypes}"
+                                  DisplayMemberPath="Name"
+                                  SelectedItem="{Binding SelectedWorkType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                  </Border>
+                    
+                
+            </Grid>
         </Grid>
     </Grid>
 </Window>

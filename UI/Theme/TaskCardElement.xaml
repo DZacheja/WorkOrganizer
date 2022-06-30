@@ -1,12 +1,14 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style TargetType="ListViewItem" x:Key="TaskCardElement">
+        <Setter Property="Opacity" Value="1"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
                     <StackPanel Orientation="Horizontal"
                                 Background="Transparent"
-                                Margin="15">
+                                Margin="15"
+                                x:Name="ElementContentPanel">
                         <Grid >
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -17,42 +19,41 @@
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition/>
-                                <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Row="0"
                                        Grid.ColumnSpan="2"
                             Text="{Binding Authors.Name}"
-                                       FontWeight="Bold"/>
+                                       FontWeight="Bold"
+                                       FontSize="20"/>
                             <TextBlock Grid.Row="1"
                                        Grid.Column="0"
-                                       FontSize="10"
-                                       HorizontalAlignment="Right"
-                                Text="Robota:"/>
-                            <TextBlock Grid.Row="1"
-                                       Grid.Column="1"
-                                       FontSize="10"
+                                       FontSize="15"
                                        Margin="5,0,0,0"
                                        TextWrapping="Wrap"
                                        HorizontalAlignment="Left"
-                                       Text="{Binding Component.Works.Name}"
-                                       Foreground="{Binding Component.Works.ColorHTML}"/>
+                                       Foreground="White"
+                                       Text="{Binding Component.Works.Name, StringFormat='Robota: {0}'}"/>
+
+                            <TextBlock Grid.Row="1"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       Margin="5,0,5,0"
+                                       Text="{Binding Component.WorkTypes.Name, StringFormat='Rodzaj: {0:dd-MM-yyyy}'}"
+                                       Foreground="White"/>
+
                             <TextBlock Grid.Row="1"
                                        Grid.Column="2"
-                                       FontSize="10"
-                                       HorizontalAlignment="Right"
-                                Text="Deadline:"/>
-                            <TextBlock Grid.Row="1"
-                                       Grid.Column="3"
-                                       FontSize="10"
+                                       FontSize="15"
                                        HorizontalAlignment="Left"
                                        Margin="5,0,0,0"
-                                       Text="{Binding Deadline, StringFormat=dd-MM-yyyy}"
-                                       Foreground="{Binding Component.Works.ColorHTML}"/>
-                            
+                                       Text="{Binding Deadline, StringFormat='Termin: {0:dd-MM-yyyy}'}"
+                                       Foreground="White"/>
                             <CheckBox Grid.Row="3"
                                       Margin="3"
                                       VerticalAlignment="Center"
-                                      Background="Beige"/>
+                                      Background="Beige"
+                                      IsChecked="{Binding Status}"/>
                             <Border Grid.Row="2"
                                     Grid.Column="0"
                                     Grid.ColumnSpan="4"
@@ -65,8 +66,8 @@
                                             MaxWidth="700">
                                     <TextBlock VerticalAlignment="Center"
                                            HorizontalAlignment="Left"
-                                           Margin="5,0,5,0"
-                                           FontSize="15"
+                                           Margin="10,5,10,5"
+                                           FontSize="25"
                                            TextWrapping="Wrap"
                                            Text="{Binding Content}"/>
 
@@ -78,5 +79,10 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}" Value="True">
+                <Setter Property="Opacity" Value="0.5"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 </ResourceDictionary>

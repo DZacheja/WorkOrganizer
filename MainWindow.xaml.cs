@@ -21,8 +21,6 @@ namespace WorkOrganizer {
         static RadioButton r;
         public MainWindow() {
             InitializeComponent();
-            r = (RadioButton)this.FindName("LoginButton");
-            System.Diagnostics.Debug.WriteLine("MainViewCreated!");
         }
 
         public static void HideLogin() {
@@ -54,5 +52,6 @@ namespace WorkOrganizer {
         private void RadioButton_Checked(object sender, RoutedEventArgs e) {
             System.Diagnostics.Debug.WriteLine("Click!");
         }
+
     }
 }

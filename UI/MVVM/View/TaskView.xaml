@@ -14,6 +14,7 @@
     <Grid>
         <ListView ItemsSource="{Binding Tasks}"
                   Background="Transparent"
-                  ItemContainerStyle="{StaticResource TaskCardElement}"/>
+                  ItemContainerStyle="{StaticResource TaskCardElement}"
+                  x:Name="tasksList"/>
     </Grid>
 </UserControl>
