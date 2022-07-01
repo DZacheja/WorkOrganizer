@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WorkOrganizer.UI.MVVM.ViewModel;
 
 namespace WorkOrganizer.UI.MVVM.View {
     /// <summary>
@@ -20,6 +21,8 @@ namespace WorkOrganizer.UI.MVVM.View {
     /// </summary>
     public partial class TaskView : UserControl {
         public TaskView() {
+            TaskViewModel taskViewModel = TaskViewModel.GetInstance();
+            this.DataContext = taskViewModel;
             InitializeComponent();
             ((INotifyCollectionChanged)tasksList.Items).CollectionChanged += ListView_CollectionChanged;
             System.Diagnostics.Debug.WriteLine("Cosntructor in tak view   ---> " + tasksList.Items.Count);

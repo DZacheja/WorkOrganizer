@@ -8,10 +8,20 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Background="Gray">
-    <UserControl.DataContext>
-        <view:TaskViewModel/>
-    </UserControl.DataContext>
+
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Ellipse Width="50"
+                 Height="50"
+                 VerticalAlignment="Bottom"
+                 HorizontalAlignment="Right"
+                 Margin="10,10,50,20"
+                 Fill="LightBlue">
+            
+        </Ellipse>
         <ListView ItemsSource="{Binding Tasks}"
                   Background="Transparent"
                   ItemContainerStyle="{StaticResource TaskCardElement}"

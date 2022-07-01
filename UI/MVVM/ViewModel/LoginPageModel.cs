@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Input;
 
 namespace WorkOrganizer.UI.MVVM.ViewModel {
-    public class LoginPageModel : ObservableObject {
+    public sealed class LoginPageModel : ObservableObject {
         public Action _hideButtonMethod;       
 
         private string _login;

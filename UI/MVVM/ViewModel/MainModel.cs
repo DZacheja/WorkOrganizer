@@ -111,7 +111,7 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             dbContext = new WorkOrganizerContext();
 
             loginPageMV = new LoginPageModel();
-            taskMV = new TaskViewModel();
+            taskMV = TaskViewModel.GetInstance();
             loginPageCommand = new RelayCommand(o => {
                 CurrentView = loginPageMV;
             });

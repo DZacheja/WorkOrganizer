@@ -124,7 +124,8 @@
                     VerticalAlignment="Stretch"
                             HorizontalAlignment="Stretch"
                             Background="#F2D6BD"
-                            CornerRadius="10">
+                            CornerRadius="10"
+                            Margin="2">
                     <StackPanel Margin="5">
                         <TextBlock Text="Zleceniodwca" 
                                    Margin="5"/>
