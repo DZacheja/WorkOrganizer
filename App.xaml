@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:WorkOrganizer"
              xmlns:viewModel="clr-namespace:WorkOrganizer.UI.MVVM.ViewModel"
              xmlns:view="clr-namespace:WorkOrganizer.UI.MVVM.View">
+
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

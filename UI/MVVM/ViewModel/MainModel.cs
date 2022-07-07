@@ -7,15 +7,50 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace WorkOrganizer.UI.MVVM.ViewModel {
-    public class MainModel:ObservableObject {
+    public class MainModel : ObservableObject {
 
         public WorkOrganizerContext dbContext;
         public RelayCommand loginPageCommand { get; set; }
         public RelayCommand taskCommand { get; set; }
+        public RelayCommand filterTaskView { get; set; }
 
         public LoginPageModel loginPageMV { get; set; }
         public TaskViewModel taskMV { get; set; }
 
+        //Constructor
+        public MainModel() {
+            dbContext = new WorkOrganizerContext();
+
+            loginPageMV = new LoginPageModel();
+            taskMV = TaskViewModel.GetInstance();
+            loginPageCommand = new RelayCommand(o => {
+                CurrentView = loginPageMV;
+            });
+            taskCommand = new RelayCommand(o => {
+                CurrentView = taskMV;
+            });
+
+            filterTaskView = new RelayCommand(o => this.CreateFilterForTaskView(),
+                o => true);
+
+            PrincipalsWork = new ObservableCollection<Work>();
+            PrincipalsWork.Add(new Work { Name = "-" });
+
+            WorkTypes = new ObservableCollection<WorkType>();
+
+            using (dbContext) {
+                var dbList = dbContext.Principals.ToList();
+                Principals = new ObservableCollection<Principal>();
+                Principals.Add(new Principal { Name = "-" });
+                foreach (var task in dbList) {
+                    Principals.Add(task);
+                }
+
+                if (Principals.Count > 0)
+                    SelectedPrincipal = Principals[0];
+            }
+
+        }
 
         // Principal Selection
         public ObservableCollection<Principal> Principals { get; set; }
@@ -23,15 +58,18 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
 
         public Principal SelectedPrincipal {
             get { return _selectedPrincipal; }
-            set { _selectedPrincipal = value;
+            set {
+                _selectedPrincipal = value;
                 OnPropertyChange();
 
                 if (_selectedPrincipal != null)
-                    FillPrincipalItems();
+                    FillPrincipalsWork();
                 else
                     PrincipalsWork.Clear();
+
             }
         }
+
 
         // work selection
         public ObservableCollection<Work> PrincipalsWork { get; set; }
@@ -47,22 +85,30 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                     FillWorkTypes();
                 else
                     WorkTypes.Clear();
+
             }
         }
 
-        private async void FillPrincipalItems() {
+        private async void FillPrincipalsWork() {
             dbContext = new WorkOrganizerContext();
             PrincipalsWork.Clear();
-            using (dbContext) {
-                var Works = await dbContext.Works.Where(x => x.PrincipalsId == _selectedPrincipal.PrincipalID).ToListAsync();
-                foreach (var task in Works) {
-                    PrincipalsWork.Add(task);
-                }
+            {
+                using (dbContext) {
+                    var Works = await dbContext.Works.Where(x => x.PrincipalsId == _selectedPrincipal.PrincipalID).ToListAsync();
+                    foreach (var task in Works) {
+                        PrincipalsWork.Add(task);
+                    }
 
-                if (PrincipalsWork.Count > 0)
-                    SelectedPrincipalWork = PrincipalsWork[0];
+                    if (PrincipalsWork.Count > 0) {
+                        PrincipalsWork.Insert(0, new Work() { Name = "-" });
+                        SelectedPrincipalWork = PrincipalsWork[0];
+                    }
+                }
             }
+
         }
+
+
 
         // Work Type selection
         public ObservableCollection<WorkType> WorkTypes { get; set; }
@@ -73,27 +119,27 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             set {
                 _selectedWorkType = value;
                 OnPropertyChange();
-                if(SelectedWorkType != null && SelectedPrincipalWork != null && SelectedPrincipal != null)
-                    taskMV.FilterByWorkAndWorkType(SelectedWorkType, SelectedPrincipalWork, SelectedPrincipal);
             }
         }
 
         private async void FillWorkTypes() {
             dbContext = new WorkOrganizerContext();
             WorkTypes.Clear();
-            using (dbContext) {
-                var Worktypes = await dbContext.WorkComponents
-                    .Where(x => x.WorkId == SelectedPrincipalWork.WorkId)
-                    .Include(x => x.WorkTypes)
-                    .Select(o => o.WorkTypes)
-                    .ToListAsync();
+            if (SelectedPrincipalWork.Name != "-") {
+                using (dbContext) {
+                    var Worktypes = await dbContext.WorkComponents
+                        .Where(x => x.WorkId == SelectedPrincipalWork.WorkId)
+                        .Include(x => x.WorkTypes)
+                        .Select(o => o.WorkTypes)
+                        .ToListAsync();
 
-                foreach (var task in Worktypes) {
-                    WorkTypes.Add(task);
+                    foreach (var task in Worktypes) {
+                        WorkTypes.Add(task);
+                    }
+                    WorkTypes.Insert(0, new WorkType() { Name = "-" });
+                    if (WorkTypes.Count > 0)
+                        SelectedWorkType = WorkTypes[0];
                 }
-
-                if (WorkTypes.Count > 0)
-                    SelectedWorkType = WorkTypes[0];
             }
         }
 
@@ -107,39 +153,13 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             }
         }
 
-        public MainModel() {
-            dbContext = new WorkOrganizerContext();
-
-            loginPageMV = new LoginPageModel();
-            taskMV = TaskViewModel.GetInstance();
-            loginPageCommand = new RelayCommand(o => {
-                CurrentView = loginPageMV;
-            });
-            taskCommand = new RelayCommand(o => {
-                CurrentView = taskMV;
-            });
-            
-            PrincipalsWork = new ObservableCollection<Work>();
-            PrincipalsWork.Add(new Work { Name = "-" });
-            
-            WorkTypes = new ObservableCollection<WorkType>();
-
-            using (dbContext) {
-                var dbList = dbContext.Principals.ToList() ;
-                Principals = new ObservableCollection<Principal>();
-                Principals.Add(new Principal { Name = "-" });
-                foreach (var task in dbList) {
-                    Principals.Add(task);
-                }
-
-                if(Principals.Count > 0)
-                    SelectedPrincipal = Principals[0];
-            }
-
-        }
 
         public void HideLoginButton() {
             CurrentView = null;
+        }
+
+        private async void CreateFilterForTaskView() {
+            taskMV.FilterByWorkAndWorkType(SelectedWorkType, SelectedPrincipalWork, SelectedPrincipal);
         }
     }
 }

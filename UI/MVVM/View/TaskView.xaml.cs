@@ -20,12 +20,12 @@ namespace WorkOrganizer.UI.MVVM.View {
     /// Interaction logic for TaskView.xaml
     /// </summary>
     public partial class TaskView : UserControl {
+        private TaskViewModel viewModel;
         public TaskView() {
-            TaskViewModel taskViewModel = TaskViewModel.GetInstance();
-            this.DataContext = taskViewModel;
+            viewModel = TaskViewModel.GetInstance();
+            this.DataContext = viewModel;
             InitializeComponent();
             ((INotifyCollectionChanged)tasksList.Items).CollectionChanged += ListView_CollectionChanged;
-            System.Diagnostics.Debug.WriteLine("Cosntructor in tak view   ---> " + tasksList.Items.Count);
             var index = tasksList.Items.Count - 1;
             var item = tasksList.Items.GetItemAt(index);
             tasksList.ScrollIntoView(item);
@@ -36,5 +36,11 @@ namespace WorkOrganizer.UI.MVVM.View {
                 tasksList.ScrollIntoView(e.NewItems[0]);
             }
         }
+
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+            viewModel.AddNewTaskVisibleButtonClicked = !viewModel.AddNewTaskVisibleButtonClicked;
+        }
+
+
     }
 }
