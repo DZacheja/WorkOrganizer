@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using WorkOrganizer.UI.MVVM.ViewModel;
 
 namespace WorkOrganizer.UI.MVVM.View {
@@ -39,8 +28,18 @@ namespace WorkOrganizer.UI.MVVM.View {
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             viewModel.AddNewTaskVisibleButtonClicked = !viewModel.AddNewTaskVisibleButtonClicked;
+            if (tasksList.Items.Count > 2) {
+                tasksList.ScrollIntoView(tasksList.Items[tasksList.Items.Count - 2]);
+            }
         }
 
 
+        private void tasksList_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
+            viewModel.UpdateChange();
+        }
+
+        private void AddNewTask_Click(object sender, RoutedEventArgs e) {
+            viewModel.InsertingNewTask(dateNewTaskDeadline.SelectedDate);
+        }
     }
 }

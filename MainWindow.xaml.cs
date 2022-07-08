@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Configuration;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WorkOrganizer {
     /// <summary>
@@ -21,13 +11,18 @@ namespace WorkOrganizer {
         static RadioButton r;
         public MainWindow() {
             InitializeComponent();
-        }
+            this.btnTasksViewShow.Visibility = Visibility.Collapsed;
+            var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            var settings = configFile.AppSettings.Settings;
 
-        public static void HideLogin() {
-            r.Visibility = Visibility.Collapsed;
+            var appsettings = ConfigurationManager.AppSettings;
+            string res = appsettings["Login"];
+            System.Diagnostics.Debug.WriteLine("Config file: " + res);
+            settings["Login"].Value = "Zmienione!";
+            configFile.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
         }
-
-        
+       
         private void Border_MouseDown(object sender, MouseButtonEventArgs e) {
             if (e.LeftButton == MouseButtonState.Pressed) {
                 DragMove();
@@ -47,10 +42,6 @@ namespace WorkOrganizer {
 
         private void CloseApplication_Button_Click(object sender, RoutedEventArgs e) {
             Application.Current.Shutdown();
-        }
-
-        private void RadioButton_Checked(object sender, RoutedEventArgs e) {
-            System.Diagnostics.Debug.WriteLine("Click!");
         }
 
     }

@@ -12,6 +12,8 @@
                 <ResourceDictionary Source="UI/Theme/LoginControl.xaml"/>
                 <ResourceDictionary Source="UI/Theme/CustomButton.xaml"/>
                 <ResourceDictionary Source="UI/Theme/TaskCardElement.xaml"/>
+                <ResourceDictionary Source="UI/Theme/NewTaskTextBox.xaml"/>
+                <ResourceDictionary Source="UI/Theme/StyledScrollBar.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type viewModel:LoginPageModel}">

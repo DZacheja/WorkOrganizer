@@ -1,13 +1,17 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity">
     <Style TargetType="ListViewItem" x:Key="TaskCardElement">
         <Setter Property="Opacity" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Padding" Value="0"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
                     <StackPanel Orientation="Horizontal"
-                                Margin="15"
-                                x:Name="ElementContentPanel">
+                                Margin="0,10,0,15"
+                                x:Name="ElementContentPanel"
+                                HorizontalAlignment="Stretch">
                         <Grid >
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -17,16 +21,17 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Row="0"
                                        Grid.ColumnSpan="2"
                             Text="{Binding Authors.Name}"
                                        FontWeight="Bold"
-                                       FontSize="20"/>
+                                       FontSize="15"
+                                       Foreground="#F2D6BD"/>
                             <TextBlock Grid.Row="1"
                                        Grid.Column="0"
-                                       FontSize="15"
+                                       FontSize="10"
                                        Margin="5,0,0,0"
                                        TextWrapping="Wrap"
                                        HorizontalAlignment="Left"
@@ -35,7 +40,7 @@
 
                             <TextBlock Grid.Row="1"
                                        Grid.Column="1"
-                                       FontSize="15"
+                                       FontSize="10"
                                        HorizontalAlignment="Left"
                                        Margin="5,0,5,0"
                                        Text="{Binding Component.WorkTypes.Name, StringFormat='Rodzaj: {0:dd-MM-yyyy}'}"
@@ -43,7 +48,7 @@
 
                             <TextBlock Grid.Row="1"
                                        Grid.Column="2"
-                                       FontSize="15"
+                                       FontSize="10"
                                        HorizontalAlignment="Left"
                                        Margin="5,0,0,0"
                                        Text="{Binding Deadline, StringFormat='Termin: {0:dd-MM-yyyy}'}"
@@ -52,39 +57,26 @@
                                       Margin="3"
                                       VerticalAlignment="Center"
                                       Background="Beige"
-                                      IsChecked="{Binding Status}">
-                                <CheckBox.Style>
-                                    <Style TargetType="CheckBox">
-                                        <Setter Property="CheckBox.Visibility" Value="Visible"/>
-                                        <Setter Property="CheckBox.IsEnabled" Value="False"/>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsChecked" Value="True">
-                                                <Setter Property="CheckBox.Visibility" Value="Collapsed"/>
-                                            </Trigger>
-                                            <DataTrigger Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType=ListViewItem}}" Value="True">
-                                                <Setter Property="CheckBox.IsEnabled" Value="True"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-
-                                    </Style>
-                                </CheckBox.Style>
+                                      IsChecked="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      IsEnabled="False"
+                                      Visibility="Collapsed">
                             </CheckBox>
                             <Border Grid.Row="2"
                                     Grid.Column="0"
                                     Grid.ColumnSpan="4"
                                     Background="{Binding Component.Works.ColorHTML}"
                                     CornerRadius="10"
-                                    BorderThickness="2"
-                                    BorderBrush="ForestGreen"
-                                    Margin="20,0,0,0">
+                                    BorderThickness="1"
+                                    BorderBrush="#F2D6BD"
+                                    Margin="0,5,0,0">
                                 <StackPanel Orientation="Vertical"
-                                            MaxWidth="700">
+                                            HorizontalAlignment="Stretch">
                                     <TextBlock VerticalAlignment="Center"
-                                           HorizontalAlignment="Left"
                                            Margin="10,5,10,5"
-                                           FontSize="25"
+                                           FontSize="15"
                                            TextWrapping="Wrap"
-                                           Text="{Binding Content}"/>
+                                           Text="{Binding Content}"
+                                           Foreground="White"/>
                                 </StackPanel>
                             </Border>
                         </Grid>
@@ -93,7 +85,7 @@
                                 <Setter Property="StackPanel.Background" Value="Transparent"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType=ListViewItem}}" Value="True">
-                                        <Setter Property="StackPanel.Background" Value="#F2D6BD" />
+                                        <Setter Property="StackPanel.Background" Value="#2E5159" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

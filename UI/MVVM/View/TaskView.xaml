@@ -7,53 +7,173 @@
              xmlns:lo="clr-namespace:WorkOrganizer"
              xmlns:view="clr-namespace:WorkOrganizer.UI.MVVM.ViewModel"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="Gray">
+             Background="#142426">
 
     <Grid >
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
- 
-        <ListView ItemsSource="{Binding Tasks}"
+
+        <ListView ItemsSource="{Binding Tasks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   Background="Transparent"
                   ItemContainerStyle="{StaticResource TaskCardElement}"
                   x:Name="tasksList"
-                  SelectedItem="{Binding SelectedTask}">
-
+                  SelectedItem="{Binding SelectedTask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                  MouseDoubleClick="tasksList_MouseDoubleClick"
+                  BorderThickness="0"
+                  BorderBrush="Transparent"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch"
+                  Padding="0"
+                  HorizontalContentAlignment="Stretch">
         </ListView>
         <Border Width="50"
             Height="50"
             VerticalAlignment="Bottom"
             HorizontalAlignment="Right"
-            Margin="10,10,50,20"
+            Margin="10,10,30,10"
             CornerRadius="50" 
             MouseLeftButtonDown="Border_MouseLeftButtonDown"
-            BorderThickness="1"
-            BorderBrush="DarkGoldenrod">
+            BorderThickness="2"
+            ToolTip="Dodaj nowe zadanie do wykonania">
             <Border.Style>
                 <Style>
-                    <Setter Property="Border.Background" Value="#F2D6BD"/>
+                    <Setter Property="Border.Background" Value="#8C8577"/>
+                    <Setter Property="Border.BorderBrush" Value="#2E5159"/>
 
                     <Style.Triggers>
                         <Trigger Property="Border.IsMouseOver" Value="True">
-                            <Setter Property="Border.Background" Value="#D9BEA7"/>
+                            <Setter Property="Border.Background" Value="#F2D6BD"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
             </Border.Style>
-            <fa:FontAwesome Icon="PlusCircle" 
+            <fa:FontAwesome Icon="CalendarPlusOutline" 
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center"
                             FontSize="30"
-                            Foreground="Green"/>
+                            Foreground="#142426"
+                            Spin="True"
+                            SpinDuration="20"/>
         </Border>
         <Border Grid.Row="1"
-                Height="100"
-                Background="Red"
-                Visibility="{Binding AddNewTaskVisible}">
+                Height="150"
+                Background="#D9BEA7"
+                Visibility="{Binding AddNewTaskVisible}"
+                CornerRadius="20"
+                Margin="10,0,10,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="250" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="4"
+                           
+                           Text="Dodawanie nowego zadania:"
+                           Margin="10,15,5,5"
+                           Foreground="Black"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           FontStyle="Italic"/>
+                <TextBox
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Grid.Row="1"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Height="30"                
+                Style="{StaticResource NewTaskTextBox}"
+                Background="#F2D6BD"
+                Margin="10,0,10,0"
+                TextWrapping="Wrap"
+                Name="txtNewTask"/>
+
+                <TextBlock Grid.Row="2"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="4"
+                       Text="Wybierz termin wykonania:"
+                       Margin="10,15,0,0"
+                       Foreground="Black"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       FontStyle="Italic"
+                       VerticalAlignment="Top"/>
+                <DatePicker
+                      Grid.Column="0"
+                      Grid.Row="3"
+                      Grid.ColumnSpan="4"
+                      Width="157"
+                      Height="30"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                      Text="Wybierz termin wykonania"
+                      Margin="10,0,0,0"
+                      SelectedDate="{x:Static sys:DateTime.Now}"
+                      Name="dateNewTaskDeadline"
+                      Background="Transparent"
+                      Foreground="#F2D6BD">
+                    <DatePicker.Style>
+                        <Style TargetType="{x:Type DatePicker}">
+                            <Style.Resources>
+                                <Style TargetType="DatePickerTextBox">
+                                    <Setter Property="Background" Value="#142426"/>
+                                </Style>
+                            </Style.Resources>
+                        </Style>
+                    </DatePicker.Style>
+                </DatePicker>
+
+                <Button Grid.Column="2"
+                        Grid.Row="3"
+                        Height="40"
+                        Width="50"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,30,0"
+                        ToolTip="Zapisz zmiany"
+                        Click="AddNewTask_Click">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="#8C8577"/>
+                            <Setter Property="Foreground" Value="#142426"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="20">
+                                            <fa:ImageAwesome 
+                                                Icon="Send"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                Margin="8"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Button.Background" Value="#142426"/>
+                                    <Setter Property="Button.Foreground" Value="#8C8577"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+            </Grid>
+
         </Border>
 
     </Grid>

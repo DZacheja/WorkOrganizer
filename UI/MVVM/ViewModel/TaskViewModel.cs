@@ -5,14 +5,30 @@ using ModernDesign.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
+using WorkOrganizer.UI.Core;
 
 namespace WorkOrganizer.UI.MVVM.ViewModel {
-    public sealed class TaskViewModel : ObservableObject {
+    public sealed class TaskViewModel : ObservableObject, INotifyPropertyChanged {
+        /// <summary>
+        /// Class instance
+        /// </summary>
         private static TaskViewModel _instance;
+
+        /// <summary>
+        /// Db context for database connections
+        /// </summary>
+        private WorkOrganizerContext dbContext;
+
+        /// <summary>
+        /// Public constructor
+        /// </summary>
+        /// <returns>Object instance</returns>
         public static TaskViewModel GetInstance() {
             if (_instance == null) {
                 _instance = new TaskViewModel();
@@ -20,8 +36,85 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             return _instance;
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        private TaskViewModel() {
+            addNewTaskVisible = Visibility.Collapsed;
+            
+
+            if (ProgramSettings.TasksTable == null) {
+                dbContext = new WorkOrganizerContext();
+                var tsk = dbContext.Tasks.Include(a => a.Authors)
+                .Include(x => x.Component).ThenInclude(x => x.Works)
+                .Include(x => x.Component).ThenInclude(x => x.WorkTypes)
+                .OrderByDescending(o => o.Deadline).ToList();
+                Tasks = new ObservableCollection<ToDoTask>();
+                foreach (var task in tsk) {
+                    Tasks.Add(task);
+                }
+                ProgramSettings.TasksTable = Tasks;
+            } else {
+                Tasks = ProgramSettings.TasksTable;
+            }
+
+
+        }
+
+        #region add new Task
+
+        public async void InsertingNewTask(DateTime? deadline) {
+            if (_newTaskText != null &&
+                deadline != null &&
+                ProgramSettings.currentWorkComponent != null) {
+
+                DateTime utc = (DateTime)deadline;
+                utc = utc.ToUniversalTime();
+                ToDoTask newTask = new ToDoTask() {
+                    AuthorsID = 1,
+                    ComponentsId = ProgramSettings.currentWorkComponent.ComponentId,
+                    Content = _newTaskText,
+                    Status = false,
+                    Deadline = utc
+                };
+                dbContext = new WorkOrganizerContext();
+                using (dbContext) {
+                    
+                    dbContext.Tasks.Add(newTask);
+
+                    var ok = await dbContext.SaveChangesAsync();
+
+                    if (ok > 0) {
+
+                        var tsk = await dbContext.Tasks
+                            .Include(a => a.Authors)
+                            .Include(x => x.Component).ThenInclude(x => x.Works)
+                            .Include(x => x.Component).ThenInclude(x => x.WorkTypes)
+                            .FirstOrDefaultAsync(x => x.ToDoTaskID == newTask.ToDoTaskID);
+                        Tasks.Add(newTask);
+                    }
+                    
+                }
+            }
+        }
+
+        /// <summary>
+        /// New Task item text
+        /// </summary>
+        private string _newTaskText;
+
+        public string NewTaskText {
+            get { return _newTaskText; }
+            set {
+                _newTaskText = value;
+                OnPropertyChange();
+            }
+        }
+
+        /// <summary>
+        /// Visibility of add new task GridRow
+        /// </summary>
         private Visibility addNewTaskVisible;
-        public RelayCommand changeStatusOfTast;
         public Visibility AddNewTaskVisible {
             get { return addNewTaskVisible; }
             set {
@@ -31,7 +124,6 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
         }
 
         private bool addNewTaskVisibleClicked;
-
         public bool AddNewTaskVisibleButtonClicked {
             get { return addNewTaskVisibleClicked; }
             set {
@@ -44,35 +136,48 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             }
         }
 
+        #endregion
 
-        public ObservableCollection<ToDoTask> Tasks { get; set; }
-        private ToDoTask? selectedTask;
+        #region Select and edit tasks
 
-        public ToDoTask? SelectedTask {
-            get { return selectedTask; }
-            set { selectedTask = value;
+        /// <summary>
+        /// Collections of tasks
+        /// </summary>
+        private ObservableCollection<ToDoTask> _tasks;
+
+        public ObservableCollection<ToDoTask> Tasks {
+            get {
+                if (_tasks == null) {
+                    _tasks = new ObservableCollection<ToDoTask>();
+                }
+                return _tasks;
+            }
+            set {
+                _tasks = value;
                 OnPropertyChange();
             }
         }
 
-        private WorkOrganizerContext dbContext;
-        private TaskViewModel() {
-            addNewTaskVisible = Visibility.Collapsed;
-            dbContext = new WorkOrganizerContext();
-            var tsk = dbContext.Tasks.Include(a => a.Authors)
-                .Include(x => x.Component).ThenInclude(x => x.Works)
-                .Include(x => x.Component).ThenInclude(x => x.WorkTypes)
-                .OrderByDescending(o => o.Deadline).ToList();
+        /// <summary>
+        /// Selected task
+        /// </summary>
+        private ToDoTask? selectedTask;
 
-            Tasks = new ObservableCollection<ToDoTask>();
-            foreach (var task in tsk) {
-                Tasks.Add(task);
+        public ToDoTask? SelectedTask {
+            get { return selectedTask; }
+            set {
+                selectedTask = value;
+                OnPropertyChange();
             }
-            changeStatusOfTast = new RelayCommand(
-                o => ChangeStatusOfTask(), o => true);
         }
 
 
+        /// <summary>
+        /// Insert new filter to listview and get data from database
+        /// </summary>
+        /// <param name="wt">Work Type object</param>
+        /// <param name="w">Work Name object</param>
+        /// <param name="p">Principal object</param>
         public async void FilterByWorkAndWorkType(WorkType wt, Work w, Principal p) {
             dbContext = new WorkOrganizerContext();
             using (dbContext) {
@@ -83,7 +188,7 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                     .Include(x => x.Component).ThenInclude(x => x.Works)
                     .Include(x => x.Component).ThenInclude(x => x.WorkTypes);
 
-                
+
                 if (p.Name != "-") { //Filter by Principal
                     var x = f.Where(x => x.Component.Works.PrincipalsId == p.PrincipalID);
                     if (w != null) {
@@ -91,7 +196,7 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                             x = x.Where(x => x.Component.Works.WorkId == w.WorkId);
                             if (wt != null) {
                                 if (wt.Name != "-") { //Filter By WorkType
-                                 x = x.Where(y => y.Component.WorkTypeId == wt.Id);
+                                    x = x.Where(y => y.Component.WorkTypeId == wt.Id);
 
                                 }
                             }
@@ -107,17 +212,29 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                         Tasks.Add(task);
                     }
                 }
-      
+
             }
 
         }
-        public void ChangeStatusOfTask() {
-            System.Diagnostics.Debug.WriteLine("ASDASDASD");
-        }
 
-        public void UpdateChange(Object sender, EventArgs e) {
-            System.Diagnostics.Debug.WriteLine("ASDASDASD");
-
+        /// <summary>
+        /// Chaange status of selected task on doubleclick
+        /// </summary>
+        public async void UpdateChange() {
+            if (selectedTask != null) {
+                dbContext = new WorkOrganizerContext();
+                if (selectedTask.Status == false) {
+                    using (dbContext) {
+                        var td = await dbContext.Tasks.FirstOrDefaultAsync(t => t.ToDoTaskID == selectedTask.ToDoTaskID);
+                        td.Status = true;
+                        //var x = Tasks.FirstOrDefault(t => t.ToDoTaskID == selectedTask.ToDoTaskID);
+                        //x.Status = true;
+                        selectedTask.Status = true;
+                        await dbContext.SaveChangesAsync();
+                    }
+                }
+            }
         }
+        #endregion
     }
 }

@@ -8,29 +8,32 @@
         xmlns:viewModel="clr-namespace:WorkOrganizer.UI.MVVM.ViewModel"
         mc:Ignorable="d"
         Title="BG-P Organizer" Height="800" Width="1200"
-        Background="#142426"
         WindowStyle="None"
         AllowsTransparency="True"
-        ResizeMode="CanResizeWithGrip">
+        Background="Transparent"
+        ResizeMode="CanResizeWithGrip" RenderTransformOrigin="0.5,0.5">
     <Window.DataContext>
         <viewModel:MainModel/>
     </Window.DataContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="25"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+    <Border CornerRadius="25"
+            Background="#142426">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <Border Grid.Row="0"
+            <Border Grid.Row="0"
                 Background="#8C8577"
-                MouseDown="Border_MouseDown">
-            <Grid HorizontalAlignment="Stretch">
-                <Label Content="BG-P Organizer"
+                MouseDown="Border_MouseDown"
+                CornerRadius="10,10,0,0">
+                <Grid HorizontalAlignment="Stretch">
+                    <Label Content="BG-P Organizer"
                        Foreground="#2E5159"
                        FontWeight="Bold"/>
-                <StackPanel HorizontalAlignment="Right"
+                    <StackPanel HorizontalAlignment="Right"
                             Orientation="Horizontal">
-                    <Button Width="20" Height="20"
+                        <Button Width="20" Height="20"
                             FontSize="10"
                             Content="__"
                             Background="Transparent"
@@ -39,7 +42,7 @@
                             FontWeight="Bold"
                             Name="Minimalize_Button"
                             Click="Minimalize_Button_Click"/>
-                    <Button Width="20" Height="20"
+                        <Button Width="20" Height="20"
                             FontSize="10"
                             Content="⎕"
                             Background="Transparent"
@@ -48,7 +51,7 @@
                             FontWeight="Bold"
                             Name="Maximalize_Button"
                             Click="Maximalize_Button_Click"/>
-                    <Button Width="20" Height="20"
+                        <Button Width="20" Height="20"
                             FontSize="10"
                             Content="X"
                             Background="Transparent"
@@ -57,98 +60,104 @@
                             FontWeight="SemiBold"
                             Name="CloseApplication_Button"
                             Click="CloseApplication_Button_Click"/>
-                </StackPanel>
-            </Grid>
-        </Border>
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="200"/>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="150"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0"
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="150"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0"
                     Background="White">
-                    <Border
+                        <Border
                         CornerRadius="30"
                         BorderThickness="2"
                         BorderBrush="Black">
-                    <Image VerticalAlignment="Stretch"
+                            <Image VerticalAlignment="Stretch"
                            HorizontalAlignment="Stretch"
                            RenderOptions.BitmapScalingMode="HighQuality"
                            Margin="10,10,10,10"
                            Source="logo_BGP.png"/>
-                    </Border>
-                    <Label Content="MENU"
+                        </Border>
+                        <Label Content="MENU"
                                FontSize="24"
                                VerticalAlignment="Bottom"
                                HorizontalAlignment="Center"
                                Foreground="#142426"
                                FontWeight="Bold"/>
-                </StackPanel>
-                <StackPanel Grid.Row="1"
-                        Background="#D9BEA7">
-
-                    <RadioButton Content="Logowanie"
+                    </StackPanel>
+                    <Border Grid.Row="1"
+                            CornerRadius="0,0,0,10"
+                            Background="#D9BEA7">
+                        <StackPanel>
+                            <RadioButton Content="Logowanie"
                                  Height="40"
                                  Style="{StaticResource MenuButtonTheme}"
                                  Command="{Binding loginPageCommand}"
-                                 x:Name="LoginButton"/>
-                    <RadioButton Content="Zadania"
+                                 x:Name="btnLoginViewShow"
+                                 FontWeight="SemiBold"
+                                 Foreground="White"/>
+                            <RadioButton Content="Zadania"
                                  Height="40"
                                  Command="{Binding taskCommand}"
                                  Style="{StaticResource MenuButtonTheme}"
-                                 x:Name="TestRadioButton"/>
-                </StackPanel>
-            </Grid>
-            <ContentControl Grid.Column="1"
+                                 x:Name="btnTasksViewShow"
+                                 FontWeight="SemiBold"
+                                 Foreground="White"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+                <ContentControl Grid.Column="1"
                                 Margin="10"
                                 Content="{Binding CurrentView}">
-            </ContentControl>
-            <Grid Grid.Row="1"
+                </ContentControl>
+                <Grid Grid.Row="1"
                   Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <TextBlock VerticalAlignment="Top"
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock VerticalAlignment="Top"
                            HorizontalAlignment="Center"
                            Text="Konfiguracja"
                            FontSize="20"
                            Foreground="Wheat"
                            Margin="10"/>
-                <Border Grid.Row="1"
+                    <Border Grid.Row="1"
                     VerticalAlignment="Stretch"
                             HorizontalAlignment="Stretch"
                             Background="#F2D6BD"
                             CornerRadius="10"
                             Margin="2">
-                    <StackPanel Margin="5">
-                        <TextBlock Text="Zleceniodwca" 
+                        <StackPanel Margin="5">
+                            <TextBlock Text="Zleceniodwca" 
                                    Margin="5"/>
-                        <ComboBox Margin="5"
+                            <ComboBox Margin="5"
                                   ItemsSource="{Binding Principals}"
                                   DisplayMemberPath="Name"
                                   SelectedItem="{Binding SelectedPrincipal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                        <TextBlock Text="Robota" 
+                            <TextBlock Text="Robota" 
                                    Margin="5"/>
-                        <ComboBox Margin="5"
+                            <ComboBox Margin="5"
                                   ItemsSource="{Binding PrincipalsWork}"
                                   DisplayMemberPath="Name"
                                   SelectedItem="{Binding SelectedPrincipalWork, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                        <TextBlock Text="Rodzaj" 
+                            <TextBlock Text="Rodzaj" 
                                    Margin="5"/>
-                        <ComboBox Margin="5"
+                            <ComboBox Margin="5"
                                   ItemsSource="{Binding WorkTypes}"
                                   DisplayMemberPath="Name"
                                   SelectedItem="{Binding SelectedWorkType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Button Margin="5"
+                            <Button Margin="5"
                                 Height="15"
                                 Width="30"
                                 fa:Awesome.Content ="Filter"
@@ -156,12 +165,13 @@
                                 Background="#D9BEA7"
                                 Command="{Binding filterTaskView}">
 
-                        </Button>
-                    </StackPanel>
-                  </Border>
-                    
-                
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
+
+                </Grid>
             </Grid>
         </Grid>
-    </Grid>
+    </Border>
 </Window>

@@ -5,6 +5,7 @@ using ModernDesign.Core;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using WorkOrganizer.UI.Core;
 
 namespace WorkOrganizer.UI.MVVM.ViewModel {
     public class MainModel : ObservableObject {
@@ -17,18 +18,25 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
         public LoginPageModel loginPageMV { get; set; }
         public TaskViewModel taskMV { get; set; }
 
-        //Constructor
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public MainModel() {
             dbContext = new WorkOrganizerContext();
 
+            // ...  Login Page ...  //
             loginPageMV = new LoginPageModel();
-            taskMV = TaskViewModel.GetInstance();
             loginPageCommand = new RelayCommand(o => {
                 CurrentView = loginPageMV;
             });
+
+            // ...  Task View ...  //
+            taskMV = TaskViewModel.GetInstance();
             taskCommand = new RelayCommand(o => {
                 CurrentView = taskMV;
             });
+
+            // ...  Fill Comboboxes ...  //
 
             filterTaskView = new RelayCommand(o => this.CreateFilterForTaskView(),
                 o => true);
@@ -52,7 +60,9 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
 
         }
 
-        // Principal Selection
+        /// <summary>
+        /// Principal filters combobox fill
+        /// </summary>
         public ObservableCollection<Principal> Principals { get; set; }
         private Principal? _selectedPrincipal;
 
@@ -69,26 +79,6 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
 
             }
         }
-
-
-        // work selection
-        public ObservableCollection<Work> PrincipalsWork { get; set; }
-        private Work? _selectedPrincipalWork;
-
-        public Work SelectedPrincipalWork {
-            get { return _selectedPrincipalWork; }
-            set {
-                _selectedPrincipalWork = value;
-                OnPropertyChange();
-
-                if (_selectedPrincipalWork != null)
-                    FillWorkTypes();
-                else
-                    WorkTypes.Clear();
-
-            }
-        }
-
         private async void FillPrincipalsWork() {
             dbContext = new WorkOrganizerContext();
             PrincipalsWork.Clear();
@@ -110,15 +100,23 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
 
 
 
-        // Work Type selection
-        public ObservableCollection<WorkType> WorkTypes { get; set; }
-        private WorkType? _selectedWorkType;
+        /// <summary>
+        /// Work filters combobox fill
+        /// </summary>
+        public ObservableCollection<Work> PrincipalsWork { get; set; }
+        private Work? _selectedPrincipalWork;
 
-        public WorkType SelectedWorkType {
-            get { return _selectedWorkType; }
+        public Work SelectedPrincipalWork {
+            get { return _selectedPrincipalWork; }
             set {
-                _selectedWorkType = value;
+                _selectedPrincipalWork = value;
                 OnPropertyChange();
+
+                if (_selectedPrincipalWork != null)
+                    FillWorkTypes();
+                else
+                    WorkTypes.Clear();
+
             }
         }
 
@@ -144,6 +142,38 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
         }
 
 
+
+        /// <summary>
+        /// Work Type Comboboxes Fill
+        /// </summary>
+        public ObservableCollection<WorkType> WorkTypes { get; set; }
+        private WorkType? _selectedWorkType;
+
+        public WorkType SelectedWorkType {
+            get { return _selectedWorkType; }
+            set {
+                _selectedWorkType = value;
+                UpdateWorkTypeSelectedInProgramSettings();
+                OnPropertyChange();
+            }
+        }
+
+        private async void UpdateWorkTypeSelectedInProgramSettings() {
+            if (_selectedWorkType != null) {
+                if (_selectedWorkType.Name != "-") {
+                    dbContext = new WorkOrganizerContext();
+                    using (dbContext) {
+                        var x = await dbContext.WorkComponents.FirstOrDefaultAsync(
+                        s => s.WorkTypeId == _selectedWorkType.Id && s.WorkId == _selectedPrincipalWork.WorkId);
+                        if (x != null) {
+                            ProgramSettings.currentWorkComponent = x;
+                        }
+                    }
+                }
+            }
+        }
+
+
         private object _currentView;
         public object CurrentView {
             get { return _currentView; }
@@ -161,5 +191,7 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
         private async void CreateFilterForTaskView() {
             taskMV.FilterByWorkAndWorkType(SelectedWorkType, SelectedPrincipalWork, SelectedPrincipal);
         }
+
+
     }
 }
