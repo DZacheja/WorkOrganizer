@@ -13,22 +13,11 @@
                             BorderThickness="0.5"
                             BorderBrush="DarkGreen">
                         <Grid>
-                            <TextBox VerticalAlignment="Stretch"
-                                     VerticalContentAlignment="Center"
-                                     HorizontalAlignment="Stretch"
-                                     Text="{Binding Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     Background="Transparent"
-                                     TextWrapping="Wrap"
-                                     BorderThickness="0"
-                                     Foreground="White"
-                                     Margin="8,0,0,0"
-                                     x:Name="LoginText">
-                            </TextBox>
                             <TextBlock VerticalAlignment="Center"
                                        HorizontalAlignment="Left"
-                                       Foreground="Wheat"
+                                       Foreground="#F2D6BD"
                                        Margin="10,0,0,0"
-                                       Text="@Insert your login value">
+                                       Text="{TemplateBinding Tag}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -40,6 +29,16 @@
                                     </Style>
                                 </TextBlock.Style>
                             </TextBlock>
+                            <TextBox VerticalAlignment="Stretch"
+                                     VerticalContentAlignment="Center"
+                                     HorizontalAlignment="Stretch"                                 
+                                     Background="Transparent"
+                                     TextWrapping="Wrap"
+                                     BorderThickness="0"
+                                     Foreground="#F2D6BD"
+                                     Margin="8,0,0,0"
+                                     x:Name="LoginText">
+                            </TextBox>
                         </Grid>
                     </Border>
                 </ControlTemplate>

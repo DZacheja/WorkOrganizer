@@ -1,7 +1,12 @@
-﻿using System.Configuration;
+﻿using DatabaseConnection.Entities;
+using Newtonsoft.Json;
+using System;
+using System.Configuration;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using WorkOrganizer.UI.Core;
 
 namespace WorkOrganizer {
     /// <summary>
@@ -12,15 +17,18 @@ namespace WorkOrganizer {
         public MainWindow() {
             InitializeComponent();
             this.btnTasksViewShow.Visibility = Visibility.Collapsed;
-            var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            var settings = configFile.AppSettings.Settings;
-
-            var appsettings = ConfigurationManager.AppSettings;
-            string res = appsettings["Login"];
-            System.Diagnostics.Debug.WriteLine("Config file: " + res);
-            settings["Login"].Value = "Zmienione!";
-            configFile.Save(ConfigurationSaveMode.Modified);
-            ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+            try {
+                string cryptoUser = File.ReadAllText("ProgramSettings.txt");
+                var decryptUser = AesOperation.DecryptString(ProgramSettings.key, cryptoUser);
+                User  us = JsonConvert.DeserializeObject<User>(decryptUser);
+                if(us != null) {
+                    ProgramSettings.currentUser = us;
+                    this.btnLoginViewShow.Visibility = Visibility.Collapsed;
+                    this.btnTasksViewShow.Visibility = Visibility.Visible;
+                }
+            } catch (Exception ex) {
+                System.Diagnostics.Debug.WriteLine(ex.Message); 
+            }
         }
        
         private void Border_MouseDown(object sender, MouseButtonEventArgs e) {

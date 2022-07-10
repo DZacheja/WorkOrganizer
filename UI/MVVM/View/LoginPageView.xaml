@@ -6,8 +6,9 @@
              xmlns:local="clr-namespace:WorkOrganizer.UI.MVVM.View"
              xmlns:loginModel="clr-namespace:WorkOrganizer.UI.MVVM.ViewModel"
              xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="500" d:DesignWidth="800"
              FontFamily="Sitka Banner"
              Background="Transparent">
     <UserControl.DataContext>
@@ -18,8 +19,11 @@
         <Grid VerticalAlignment="Stretch"
               HorizontalAlignment="Stretch">
             <Grid.RowDefinitions>
-                <RowDefinition Height="150"/>
-                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Border Grid.Row="0"
                     Margin="20"
@@ -28,17 +32,19 @@
                 <Label VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        FontSize="30"
-                       Content="Log in or create new account"
+                       Content="Logowanie"
                        Foreground="White"
                        FontWeight="SemiBold">
                 </Label>
             </Border>
-            <Border Grid.Row="1"
+            <!-- Login panel -->
+            <Border     Grid.Row="1"
                         CornerRadius="20"
                         VerticalAlignment="Stretch"
                         Background="#8C8577"
                         Margin="10,0,10,10"   
-                        HorizontalAlignment="Stretch">
+                        HorizontalAlignment="Stretch"
+                        Name="BorderLogin">
                 <Grid Grid.Row="1"
                   VerticalAlignment="Stretch"
                   HorizontalAlignment="Stretch">
@@ -48,43 +54,410 @@
                         <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
+                    
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
+                    
+                    <!-- Login TextBox Icon  -->
                     <TextBlock FontSize="20"
-                           Text="Login:"
                            VerticalAlignment="Top"
                            HorizontalAlignment="Right"
                            Margin="0,10,0,0"
-                           Grid.Row="0" Grid.Column="0" FontFamily="Sitka Banner">
-
+                           Grid.Row="0" Grid.Column="0" FontFamily="Sitka Banner"
+                           Height="30"
+                           TextAlignment="Right">
+                        <fa:ImageAwesome Icon="User" Foreground="#D9BEA7"/>
                     </TextBlock>
+
+                    <!-- Login TextBox -->
                     <TextBox Grid.Row="0" Grid.Column="1"
                     VerticalAlignment="Top"
                          HorizontalAlignment="Stretch"
                          Height="30"
                          Style="{StaticResource LoginTextBox}"
+                         Text="{Binding Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Background="Gray"
+                         Margin="10,10,30,0" Tag="@Wprowadź login"/>
+
+                    <!-- Password TextBox Icon  -->
+                    <TextBlock FontSize="20"
+                           Height="30"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Right"
+                           Margin="0,10,0,0"
+                           Grid.Row="1" Grid.Column="0" FontFamily="Sitka Banner">
+                        <fa:ImageAwesome Icon="Lock" Foreground="#D9BEA7"/>
+                    </TextBlock>
+
+                    <!-- Password TextBox -->
+                    <PasswordBox Grid.Column="1"
+                                 Grid.Row="1"
+                                 PasswordChar="•"
+                                 Margin="10,10,5,10"
+                                 Height="30">
+                        <PasswordBox.Style>
+                            <Style TargetType="{x:Type PasswordBox}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="PasswordBox">
+                                            <Border CornerRadius="8"
+                                                Background="Gray"
+                                                    BorderThickness="0.5"
+                                                    BorderBrush="DarkGreen" Margin="0,0,22,0">
+                                                <Grid>
+                                                    <PasswordBox Background="Transparent"
+                                                                 VerticalAlignment="Center"
+                                                                 HorizontalAlignment="Stretch"
+                                                                 Name="txtPassword"
+                                                                 PasswordChanged="txtPassword_PasswordChanged"
+                                                                 Margin="10,1,5,1"
+                                                                 BorderBrush="Transparent"
+                                                                 BorderThickness="0"
+                                                                 Foreground="#F2D6BD">
+                                                    </PasswordBox>
+                                                </Grid>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </PasswordBox.Style>
+                    </PasswordBox>
+
+                    <!-- Button to log in into database-->
+                    <Button Grid.Column="1"
+                        Grid.Row="3"
+                        Height="30"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Stretch"
+                        Margin="130,0,130,10"
+                        ToolTip="Zaloguj się."
+                        Name="LogInButton"
+                        Click="LogInButton_Click">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Background" Value="Gray"/>
+                                <Setter Property="Foreground" Value="#142426"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    CornerRadius="8"
+                                                    BorderBrush="DarkGreen"
+                                                    BorderThickness="0.5">
+                                                <Grid Margin="3">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="1*"/>
+                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="1*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <fa:ImageAwesome 
+                                                    Icon="SignIn"
+                                                    Foreground="{TemplateBinding Foreground}"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center" Height="13" Width="16"/>
+                                                    <fa:ImageAwesome 
+                                                        Grid.Column="2"
+                                                    Rotation="180"    
+                                                    Icon="SignIn"
+                                                    Foreground="{TemplateBinding Foreground}"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center" Height="13" Width="16"/>
+                                                    <TextBlock
+                                                    Grid.Column="1"
+                                                    Text="Zaloguj"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"
+                                                    Height="15" Width="34"
+                                                    Foreground="{TemplateBinding Foreground}"/>
+                                                </Grid>
+
+
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Button.Background" Value="#142426"/>
+                                        <Setter Property="Button.Foreground" Value="Gray"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    
+                    
+                </Grid>
+            </Border>
+            <!-- Create new account or bac to login button -->
+            <Button     Grid.Row="2"
+                        Height="30"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Stretch"
+                        Margin="280,0,280,10"
+                        ToolTip="Zaloguj się."
+                        Name="btnNewAccount"
+                        Click="NewAccount_Click"
+                        Tag="Utwórz nowe konto">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="Gray"/>
+                        <Setter Property="Foreground" Value="#142426"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}"
+                                                    CornerRadius="8"
+                                                    BorderBrush="DarkGreen"
+                                                    BorderThickness="0.5">
+                                        <Grid Margin="3">
+                                            <TextBlock
+                                                    Text="{TemplateBinding Tag}"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Stretch"
+                                                    Height="15"
+                                                    TextAlignment="Center"
+                                                    Foreground="{TemplateBinding Foreground}"/>
+                                        </Grid>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Button.Background" Value="#142426"/>
+                                <Setter Property="Button.Foreground" Value="Gray"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            
+            <!-- Create new account panel-->
+            <Border Grid.Row="3"
+                        CornerRadius="20"
+                        VerticalAlignment="Stretch"
+                        Background="#8C8577"
+                        Margin="10,0,10,0"   
+                        HorizontalAlignment="Stretch"
+                        Name="borderNewAccount"
+                        Visibility="Visible">
+                <Grid Grid.Row="1"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <!-- New login TextBox Icon -->
+                    <TextBlock FontSize="20"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Right"
+                           Margin="0,10,0,0"
+                           Grid.Row="0" Grid.Column="0" FontFamily="Sitka Banner"
+                           Height="30"
+                           TextAlignment="Right">
+                        <fa:ImageAwesome Icon="User" Foreground="#D9BEA7"/>
+
+                    </TextBlock>
+                    <!-- New login TextBox -->
+                    <TextBox Grid.Row="0" Grid.Column="1"
+                    VerticalAlignment="Top"
+                         HorizontalAlignment="Stretch"
+                         Height="30"
+                         Style="{StaticResource LoginTextBox}"
+                         Text="{Binding Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Tag="@Wprowadź login"
                          Background="Gray"
                          Margin="10,10,30,0">
                     </TextBox>
-                    <Button Content="Zatwierdź"
-                        Command="{Binding Path=LogIntoDatabase}"
-                        Grid.Column="2"
-                        Foreground="Red"
-                        VerticalAlignment="Stretch"
-                        HorizontalAlignment="Stretch"
-                        Margin="5,10,5,0">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
+                    
+                    <!-- New Password TextBox Icon -->
+                    <TextBlock FontSize="20"
+                           Height="30"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Right"
+                           Margin="0,10,0,0"
+                           Grid.Row="1" Grid.Column="0" FontFamily="Sitka Banner">
+                        <fa:ImageAwesome Icon="Lock" Foreground="#D9BEA7"/>
+                    </TextBlock>
 
+                    <!-- New Password TextBox -->
+                    <PasswordBox Grid.Column="1"
+                                 Grid.Row="1"
+                                 PasswordChar="•"
+                                 Margin="10,10,5,10"
+                                 Height="30">
+                        <PasswordBox.Style>
+                            <Style TargetType="{x:Type PasswordBox}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="PasswordBox">
+                                            <Border CornerRadius="8"
+                                                Background="Gray"
+                                                    BorderThickness="0.5"
+                                                    BorderBrush="DarkGreen" Margin="0,0,22,0">
+                                                <Grid>
+                                                    <PasswordBox Background="Transparent"
+                                                                 VerticalAlignment="Center"
+                                                                 HorizontalAlignment="Stretch"
+                                                                 Name="txtPassword"
+                                                                 PasswordChanged="txtPassword_PasswordChanged"
+                                                                 Margin="10,1,5,1"
+                                                                 BorderBrush="Transparent"
+                                                                 BorderThickness="0"
+                                                                 Foreground="#F2D6BD">
+                                                    </PasswordBox>
+                                                </Grid>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </PasswordBox.Style>
+                    </PasswordBox>
+
+                    <!-- New Mail TextBox Icon -->
+                    <TextBlock FontSize="15"
+                           Height="30"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"
+                           Margin="0,0,0,10"
+                           Grid.Row="3" Grid.Column="0" FontFamily="Sitka Banner">
+                        <fa:ImageAwesome Icon="Envelope" Foreground="#D9BEA7"
+                                         Width="25"
+                                         Height="30"/>
+                    </TextBlock>
+
+                    <!-- New Mail TextBox -->
+                    <TextBox Grid.Row="3" Grid.Column="1"
+                    VerticalAlignment="Top"
+                         HorizontalAlignment="Stretch"
+                         Height="30"
+                         Style="{StaticResource LoginTextBox}"
+                         Text="{Binding Mail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Tag="@Wprowadź mail"
+                         Background="Gray"
+                         Margin="10,0,30,10">
+                    </TextBox>
+
+                    <!-- New Username TextBox Icon -->
+                    <TextBlock FontSize="15"
+                           Height="30"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"
+                           Margin="0,0,0,10"
+                           Grid.Row="4" Grid.Column="0" FontFamily="Sitka Banner">
+                        <fa:ImageAwesome Icon="AddressCard" Foreground="#D9BEA7"
+                                         Width="25"
+                                         Height="30"/>
+                    </TextBlock>
+
+                    <!-- New Username TextBox -->
+                    <TextBox Grid.Row="4" Grid.Column="1"
+                    VerticalAlignment="Top"
+                         HorizontalAlignment="Stretch"
+                         Height="30"
+                         Style="{StaticResource LoginTextBox}"
+                         Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Tag="@Wprowadź imię i nazwisko"
+                         Background="Gray"
+                         Margin="10,0,30,10">
+                    </TextBox>
+
+                    <!-- New Account create button -->
+                    <Button Grid.Column="1"
+                        Grid.Row="5"
+                        Height="30"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Stretch"
+                        Margin="130,0,130,10"
+                        ToolTip="Utwórz nowe konto."
+                        Click="CreateNewAccount_Click">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Background" Value="Gray"/>
+                                <Setter Property="Foreground" Value="#142426"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    CornerRadius="8"
+                                                    BorderBrush="DarkGreen"
+                                                    BorderThickness="0.5">
+                                                <Grid Margin="3">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="1*"/>
+                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="1*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <fa:ImageAwesome 
+                                                    Icon="SignIn"
+                                                    Foreground="{TemplateBinding Foreground}"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center" Height="13" Width="16"/>
+                                                    <fa:ImageAwesome 
+                                                        Grid.Column="2"
+                                                    Rotation="180"    
+                                                    Icon="SignIn"
+                                                    Foreground="{TemplateBinding Foreground}"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center" Height="13" Width="16"/>
+                                                    <TextBlock
+                                                    Grid.Column="1"
+                                                    Text="Zatwierdź"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"
+                                                    Height="15" Width="50"
+                                                    Foreground="{TemplateBinding Foreground}"/>
+                                                </Grid>
+
+
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Button.Background" Value="#142426"/>
+                                        <Setter Property="Button.Foreground" Value="Gray"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
                     </Button>
                 </Grid>
             </Border>
+
+            <TextBlock Grid.Row="4"
+                       Text="Testowee"
+                       Margin="20,0,0,10"
+                       FontSize="15"
+                       Foreground="#8C8577"
+                       Name="lblInfo"
+                       Visibility="Collapsed"/>
         </Grid>
     </Border>
 
 </UserControl>
+
+    

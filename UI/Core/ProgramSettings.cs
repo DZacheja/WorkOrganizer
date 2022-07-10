@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace WorkOrganizer.UI.Core {
     public static class ProgramSettings {
+        public static readonly string key = "$B&E)H@McQfTjWnZ";
 
         public static User? currentUser { get; set; }
         public static WorkComponent? currentWorkComponent { get; set; }

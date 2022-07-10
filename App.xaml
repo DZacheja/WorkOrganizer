@@ -9,7 +9,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="UI/Theme/MenuButtonTheme.xaml"/>
-                <ResourceDictionary Source="UI/Theme/LoginControl.xaml"/>
+                <ResourceDictionary Source="UI/Theme/LoginViewTextBox.xaml"/>
                 <ResourceDictionary Source="UI/Theme/CustomButton.xaml"/>
                 <ResourceDictionary Source="UI/Theme/TaskCardElement.xaml"/>
                 <ResourceDictionary Source="UI/Theme/NewTaskTextBox.xaml"/>

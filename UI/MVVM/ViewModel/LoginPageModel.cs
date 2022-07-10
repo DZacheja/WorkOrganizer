@@ -11,7 +11,14 @@ using System.Windows.Input;
 
 namespace WorkOrganizer.UI.MVVM.ViewModel {
     public sealed class LoginPageModel : ObservableObject {
-        public Action _hideButtonMethod;       
+        private static LoginPageModel _instance;
+
+        public static LoginPageModel GetInstance() {
+            if (_instance == null) {
+                _instance = new LoginPageModel();
+            }
+            return _instance;
+        }
 
         private string _login;
         public string Login {
@@ -21,29 +28,49 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                 OnPropertyChange();
             }
         }
-        private ICommand _logIntoDatabase;
 
-        public ICommand LogIntoDatabase {
-            get {
-                if (_logIntoDatabase == null) {
-                    _logIntoDatabase = new RelayCommand(
-                        param => this.LogInto(),
-                        param => this.CanLogInto()
-                        );
-                }
-                return _logIntoDatabase;
+
+        private string _mail;
+        public string Mail {
+            get { return _mail; }
+            set {
+                _mail = value;
+                OnPropertyChange();
             }
         }
 
-        private async void LogInto() {
-            
+        private string _userName;
+        public string UserName {
+            get { return _userName; }
+            set {
+                _userName = value;
+                OnPropertyChange();
+            }
         }
 
-        private bool CanLogInto() {
-            if (_login != null) {
-                return true;
+        private string _password;
+
+        public string Password {
+            get { return _password; }
+            set { _password = value;
+                OnPropertyChange();
+            }
+        }
+
+
+        private async void LogInto() {
+            if (_login != null && _password != null && _mail != null && _userName != null) {
+
             } else {
-                return false;
+                throw new Exception("Empty login or password");
+            }
+        }
+
+        public async void LogIntoDatabase() {
+            if(_login != null && _password != null) {
+
+            } else {
+                throw new Exception("Empty login or password");
             }
         }
 

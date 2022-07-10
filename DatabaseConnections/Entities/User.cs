@@ -6,7 +6,8 @@ namespace DatabaseConnection.Entities {
     public class User {
         [Key]
         public int UserID { get; set; }
-
+        public string UserLogin { get; set; }
+        public string Password { get; set; }
         public string Name{ get; set; }
         public string Mail { get; set; }
 
