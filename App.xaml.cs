@@ -14,11 +14,14 @@ namespace WorkOrganizer {
     /// </summary>
     public partial class App : Application {
         protected override void OnStartup(StartupEventArgs e) {
-            Mediator mediator = new Mediator();
             MainModel mainModel = new MainModel();
             MainWindow = new MainWindow() {
                 DataContext = mainModel
             };
+            if (ProgramSettings.currentUser == null)
+                mainModel.ShowLoginButton();
+            else
+                mainModel.HideLoginButton();
 
             MainWindow.Show();
             base.OnStartup(e);

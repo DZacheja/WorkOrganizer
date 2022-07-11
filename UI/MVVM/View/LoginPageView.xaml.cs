@@ -25,11 +25,12 @@ namespace WorkOrganizer.UI.MVVM.View {
             }
         }
 
-        private void LogInButton_Click(object sender, System.Windows.RoutedEventArgs e) {
+        private async void LogInButton_Click(object sender, System.Windows.RoutedEventArgs e) {
             try {
-                loginPageM.LogIntoDatabase();
-            } catch (Exception ex) {
-                showLblInfo(ex.Message, "#DC143C");
+                await loginPageM.LogIntoDatabase();
+                await showLblInfo("Pomyślnie zalogowano!", "#DC143C");
+            } catch (System.Exception ex) {
+                await showLblInfo(ex.Message, "#DC143C");
             }
         }
 
@@ -46,11 +47,17 @@ namespace WorkOrganizer.UI.MVVM.View {
             }
         }
 
-        private void CreateNewAccount_Click(object sender, System.Windows.RoutedEventArgs e) {
-            this.BorderLogin.Visibility = System.Windows.Visibility.Collapsed;
+        private async void CreateNewAccount_Click(object sender, System.Windows.RoutedEventArgs e) {
+            try {
+                await loginPageM.CreateNewAccount();
+                await showLblInfo("Pomyślnie utworzono nowe konto, można się teraz zalogować", "#DC143C");
+                NewAccount_Click(this, e);
+            } catch (System.Exception ex) {
+                await showLblInfo(ex.Message, "##00cc00");
+            }
         }
         private async Task showLblInfo(string txt, string color) {
-            Task.Run(() => {
+            _ = Task.Run(() => {
                 this.lblInfo.Dispatcher.Invoke(new Action(async () => {
                     this.lblInfo.Text = txt;
                     var bc = new BrushConverter();

@@ -7,24 +7,22 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using WorkOrganizer.UI.Core;
+using WorkOrganizer.UI.MVVM.ViewModel;
 
 namespace WorkOrganizer {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        static RadioButton r;
         public MainWindow() {
             InitializeComponent();
-            this.btnTasksViewShow.Visibility = Visibility.Collapsed;
             try {
-                string cryptoUser = File.ReadAllText("ProgramSettings.txt");
+                string cryptoUser = File.ReadAllText(ProgramSettings.LoggedUserClassFile);
+
                 var decryptUser = AesOperation.DecryptString(ProgramSettings.key, cryptoUser);
                 User  us = JsonConvert.DeserializeObject<User>(decryptUser);
                 if(us != null) {
                     ProgramSettings.currentUser = us;
-                    this.btnLoginViewShow.Visibility = Visibility.Collapsed;
-                    this.btnTasksViewShow.Visibility = Visibility.Visible;
                 }
             } catch (Exception ex) {
                 System.Diagnostics.Debug.WriteLine(ex.Message); 
@@ -52,5 +50,9 @@ namespace WorkOrganizer {
             Application.Current.Shutdown();
         }
 
+        private void AddNewWork_Click(object sender, RoutedEventArgs e) {
+            var mm = (MainModel)this.DataContext;
+            
+        }
     }
 }

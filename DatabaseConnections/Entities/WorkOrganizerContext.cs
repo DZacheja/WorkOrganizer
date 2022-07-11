@@ -54,7 +54,6 @@ namespace DatabaseConnection {
                 .HasForeignKey(wi => wi.WorkId)
                 );
 
-
             //Work Component
             modelBuilder.Entity<WorkComponent>(wc => {
                 wc.HasMany(w => w.Tasks)

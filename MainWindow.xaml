@@ -22,11 +22,12 @@
                 <RowDefinition Height="25"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-
+            <!-- Main Window Content -->
             <Border Grid.Row="0"
                 Background="#8C8577"
                 MouseDown="Border_MouseDown"
                 CornerRadius="10,10,0,0">
+                <!-- Upper Menu bar -->
                 <Grid HorizontalAlignment="Stretch">
                     <Label Content="BG-P Organizer"
                        Foreground="#2E5159"
@@ -74,6 +75,7 @@
                         <RowDefinition Height="150"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
+                    <!-- Logo -->
                     <StackPanel Grid.Row="0"
                     Background="White">
                         <Border
@@ -93,6 +95,7 @@
                                Foreground="#142426"
                                FontWeight="Bold"/>
                     </StackPanel>
+                    <!-- Menu buttons -->
                     <Border Grid.Row="1"
                             CornerRadius="0,0,0,10"
                             Background="#D9BEA7">
@@ -103,24 +106,38 @@
                                  Command="{Binding loginPageCommand}"
                                  x:Name="btnLoginViewShow"
                                  FontWeight="SemiBold"
-                                 Foreground="White"/>
+                                 Foreground="White"
+                                 Visibility="{Binding LoginBtnVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <RadioButton Content="Zadania"
                                  Height="40"
                                  Command="{Binding taskCommand}"
                                  Style="{StaticResource MenuButtonTheme}"
                                  x:Name="btnTasksViewShow"
                                  FontWeight="SemiBold"
+                                 Visibility="{Binding OtherButtonsVilibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Foreground="White"/>
                         </StackPanel>
                     </Border>
+                    <!-- Login Info -->
+                    <TextBlock Grid.Row="1"
+                               VerticalAlignment="Bottom"
+                               Text="{Binding CurrentUserLogged, StringFormat='Zalogowany jako:\&#x0a;{0}'}"
+                               Margin="2,10,2,10"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"
+                               Foreground="#142426"
+                               Visibility="{Binding OtherButtonsVilibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    </TextBlock>
                 </Grid>
                 <ContentControl Grid.Column="1"
                                 Margin="10"
                                 Content="{Binding CurrentView}">
                 </ContentControl>
+                <!-- Right Menu -->
                 <Grid Grid.Row="1"
                   Grid.Column="2">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
@@ -130,6 +147,7 @@
                            FontSize="20"
                            Foreground="Wheat"
                            Margin="10"/>
+                    <!-- Filters -->
                     <Border Grid.Row="1"
                     VerticalAlignment="Stretch"
                             HorizontalAlignment="Stretch"
@@ -168,7 +186,44 @@
                             </Button>
                         </StackPanel>
                     </Border>
+                    <!-- Add new Work element-->
+                    <Button Grid.Column="2"
+                        Grid.Row="3"
+                        Height="40"
+                        Width="50"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Margin="0,10,0,0"
+                        ToolTip="Dodan nowe zlecenie"
+                        Name="AddNewWork"
+                        Command="{Binding newWorkCommand}">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Background" Value="#8C8577"/>
+                                <Setter Property="Foreground" Value="#142426"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="20">
+                                                <fa:ImageAwesome 
+                                                Icon="UserPlus"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                Margin="8"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
 
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Button.Background" Value="#142426"/>
+                                        <Setter Property="Button.Foreground" Value="#8C8577"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
 
                 </Grid>
             </Grid>

@@ -108,11 +108,11 @@ namespace WorkOrganizer.Migrations
 
             modelBuilder.Entity("DatabaseConnection.Entities.User", b =>
                 {
-                    b.Property<int>("UserID")
+                    b.Property<int?>("UserID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("UserID"));
 
                     b.Property<string>("Mail")
                         .IsRequired()

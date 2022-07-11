@@ -1,8 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace DatabaseConnection.Entities {
     public class Message {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MessageId { get; set; }
         public string Content{ get; set; }
         public DateTime Created { get; set; }

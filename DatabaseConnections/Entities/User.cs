@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DatabaseConnection.Entities {
     public class User {
         [Key]
-        public int UserID { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int? UserID { get; set; }
         public string UserLogin { get; set; }
         public string Password { get; set; }
         public string Name{ get; set; }

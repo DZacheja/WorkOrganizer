@@ -37,7 +37,8 @@
                                      BorderThickness="0"
                                      Foreground="#F2D6BD"
                                      Margin="8,0,0,0"
-                                     x:Name="LoginText">
+                                     x:Name="LoginText"
+                                     Text="{Binding Path=Text, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                             </TextBox>
                         </Grid>
                     </Border>

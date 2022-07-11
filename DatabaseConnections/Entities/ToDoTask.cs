@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -14,6 +15,7 @@ namespace DatabaseConnection.Entities {
         // Declare the event
         public event PropertyChangedEventHandler PropertyChanged;
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ToDoTaskID { get; set; }
 
         public string Content { get; set; }

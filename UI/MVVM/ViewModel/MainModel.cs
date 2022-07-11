@@ -5,27 +5,41 @@ using ModernDesign.Core;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using WorkOrganizer.UI.Core;
 
 namespace WorkOrganizer.UI.MVVM.ViewModel {
     public class MainModel : ObservableObject {
 
         public WorkOrganizerContext dbContext;
+
         public RelayCommand loginPageCommand { get; set; }
         public RelayCommand taskCommand { get; set; }
         public RelayCommand filterTaskView { get; set; }
+        public RelayCommand newWorkCommand { get; set; }
 
         public LoginPageModel loginPageMV { get; set; }
         public TaskViewModel taskMV { get; set; }
+        public NewWorkPageModel newWorkPageMV { get; set; }
+
+        private string? _currentUserLogged;
+
+        public string? CurrentUserLogged {
+            get { return _currentUserLogged; }
+            set {
+                _currentUserLogged = value;
+                OnPropertyChange();
+            }
+        }
+
 
         /// <summary>
         /// Constructor
         /// </summary>
         public MainModel() {
             dbContext = new WorkOrganizerContext();
-
             // ...  Login Page ...  //
-            loginPageMV = new LoginPageModel();
+            loginPageMV = LoginPageModel.GetInstance();
             loginPageCommand = new RelayCommand(o => {
                 CurrentView = loginPageMV;
             });
@@ -34,6 +48,15 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             taskMV = TaskViewModel.GetInstance();
             taskCommand = new RelayCommand(o => {
                 CurrentView = taskMV;
+            });
+
+            // ... New Work View ... //
+            newWorkPageMV = NewWorkPageModel.Instance();
+            newWorkCommand = new RelayCommand(o => {
+                if (CurrentView == newWorkPageMV)
+                    CurrentView = null;
+                else
+                    CurrentView = newWorkPageMV;
             });
 
             // ...  Fill Comboboxes ...  //
@@ -183,10 +206,43 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             }
         }
 
+        /// <summary>
+        /// Login Visibility
+        /// </summary>
 
+        private Visibility _loginVisibility;
+
+        public Visibility LoginBtnVisibility {
+            get { return _loginVisibility; }
+            set {
+                _loginVisibility = value;
+
+                OnPropertyChange();
+            }
+        }
+
+        private Visibility _otherButtonsVilibility;
+        public Visibility OtherButtonsVilibility {
+            get { return _otherButtonsVilibility; }
+            set {
+                _otherButtonsVilibility = value;
+
+                OnPropertyChange();
+            }
+        }
         public void HideLoginButton() {
+            LoginBtnVisibility = Visibility.Collapsed;
+            OtherButtonsVilibility = Visibility.Visible;
+            CurrentView = null;
+            CurrentUserLogged = ProgramSettings.currentUser.Name;
+        }
+
+        public void ShowLoginButton() {
+            LoginBtnVisibility = Visibility.Visible;
+            OtherButtonsVilibility = Visibility.Collapsed;
             CurrentView = null;
         }
+
 
         private async void CreateFilterForTaskView() {
             taskMV.FilterByWorkAndWorkType(SelectedWorkType, SelectedPrincipalWork, SelectedPrincipal);
