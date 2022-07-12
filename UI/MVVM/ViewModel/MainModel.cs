@@ -82,6 +82,19 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             }
 
         }
+        public void RefreshPrincipals() {
+            dbContext = new WorkOrganizerContext();
+            var dbList = dbContext.Principals.ToList();
+            Principals.Clear();
+            Principals.Add(new Principal { Name = "-" });
+            foreach (var task in dbList) {
+                Principals.Add(task);
+            }
+
+            if (Principals.Count > 0)
+                SelectedPrincipal = Principals[0];
+            ProgramSettings.currentWorkComponent = null;
+        }
 
         /// <summary>
         /// Principal filters combobox fill
@@ -116,6 +129,8 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                         PrincipalsWork.Insert(0, new Work() { Name = "-" });
                         SelectedPrincipalWork = PrincipalsWork[0];
                     }
+                    ProgramSettings.currentWorkComponent = null;
+
                 }
             }
 
@@ -192,8 +207,10 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                             ProgramSettings.currentWorkComponent = x;
                         }
                     }
-                }
-            }
+                } else
+                    ProgramSettings.currentWorkComponent = null;
+            }else
+                ProgramSettings.currentWorkComponent = null;
         }
 
 

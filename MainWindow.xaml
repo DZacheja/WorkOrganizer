@@ -140,6 +140,7 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock VerticalAlignment="Top"
                            HorizontalAlignment="Center"
@@ -159,14 +160,23 @@
                                    Margin="5"/>
                             <ComboBox Margin="5"
                                   ItemsSource="{Binding Principals}"
+                                  Background="Gray"
+                                  Foreground="#F2D6BD"
+                                  FontWeight="SemiBold"
+                                  Height="25"
+                                  Style="{StaticResource theComboBox}"
                                   DisplayMemberPath="Name"
-                                  SelectedItem="{Binding SelectedPrincipal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
+                                  SelectedItem="{Binding SelectedPrincipal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <TextBlock Text="Robota" 
                                    Margin="5"/>
                             <ComboBox Margin="5"
                                   ItemsSource="{Binding PrincipalsWork}"
                                   DisplayMemberPath="Name"
+                                  Background="Gray"
+                                  Foreground="#F2D6BD"
+                                  FontWeight="SemiBold"
+                                  Height="25"
+                                  Style="{StaticResource theComboBox}"
                                   SelectedItem="{Binding SelectedPrincipalWork, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Rodzaj" 
@@ -174,6 +184,11 @@
                             <ComboBox Margin="5"
                                   ItemsSource="{Binding WorkTypes}"
                                   DisplayMemberPath="Name"
+                                  Background="Gray"
+                                  Foreground="#F2D6BD"
+                                  FontWeight="SemiBold"
+                                  Height="25"
+                                  Style="{StaticResource theComboBox}"
                                   SelectedItem="{Binding SelectedWorkType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <Button Margin="5"
                                 Height="15"
@@ -182,8 +197,53 @@
                                 Foreground="#2E5159"
                                 Background="#D9BEA7"
                                 Command="{Binding filterTaskView}">
-
                             </Button>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Pokaż tylko do zrobienia: "
+                                           Margin="0,0,15,0">
+                                    
+                                </TextBlock>
+                            <CheckBox Name="asdas"
+                                      Height="15"
+                                      Width="30"
+                                      HorizontalAlignment="Left">
+                                <CheckBox.Style>
+                                    <Style TargetType="CheckBox">
+                                        <Setter Property="Foreground" Value="#8C8577"/>
+                                        <Setter Property="Background" Value="DarkRed"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type CheckBox}">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            CornerRadius="8">
+
+                                                        <Ellipse Fill="{TemplateBinding Foreground}"
+                                                             Width="{TemplateBinding Height}">
+                                                            <Ellipse.Style>
+                                                                <Style TargetType="Ellipse">
+                                                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type CheckBox}}}" Value="True">
+                                                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Ellipse.Style>
+                                                        </Ellipse>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsChecked" Value="True">
+                                                <Setter Property="Background" Value="Green"/>
+                                                <Setter Property="Foreground" Value="Gray"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </CheckBox.Style>
+                            </CheckBox>
+                            </StackPanel>
                         </StackPanel>
                     </Border>
                     <!-- Add new Work element-->
@@ -191,7 +251,7 @@
                         Grid.Row="3"
                         Height="40"
                         Width="50"
-                        VerticalAlignment="Center"
+                        VerticalAlignment="Top"
                         HorizontalAlignment="Center"
                         Margin="0,10,0,0"
                         ToolTip="Dodan nowe zlecenie"
@@ -208,6 +268,44 @@
                                                 CornerRadius="20">
                                                 <fa:ImageAwesome 
                                                 Icon="UserPlus"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                Margin="8"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Button.Background" Value="#142426"/>
+                                        <Setter Property="Button.Foreground" Value="#8C8577"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <!-- Settinga new Work element-->
+                    <Button Grid.Column="2"
+                        Grid.Row="4"
+                        Height="40"
+                        Width="50"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Center"
+                        Margin="0,10,0,20"
+                        ToolTip="Dodan nowe zlecenie"
+                        Name="btnSettings">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Background" Value="#8C8577"/>
+                                <Setter Property="Foreground" Value="#142426"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="20">
+                                                <fa:ImageAwesome 
+                                                Icon="Cogs"
                                                 Foreground="{TemplateBinding Foreground}"
                                                 Margin="8"/>
                                             </Border>

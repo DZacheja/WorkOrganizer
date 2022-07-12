@@ -6,6 +6,7 @@ namespace DatabaseConnection.Entities {
     public class Message {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(Order = 1, TypeName = "serial")]
         public int MessageId { get; set; }
         public string Content{ get; set; }
         public DateTime Created { get; set; }

@@ -61,7 +61,7 @@
                             SpinDuration="20"/>
         </Border>
         <Border Grid.Row="1"
-                Height="150"
+                Height="160"
                 Background="#D9BEA7"
                 Visibility="{Binding AddNewTaskVisible}"
                 CornerRadius="20"
@@ -72,6 +72,7 @@
                     <ColumnDefinition Width="250" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -171,6 +172,15 @@
                         </Style>
                     </Button.Style>
                 </Button>
+                <!-- Lbl info -->
+                <TextBlock Grid.Row="5"
+                       Text="Testowee"
+                       Margin="20,0,0,15"
+                       FontSize="15"
+                       Foreground="#8C8577"
+                       Name="lblInfo"
+                       Visibility="Collapsed"/>
+
 
             </Grid>
 

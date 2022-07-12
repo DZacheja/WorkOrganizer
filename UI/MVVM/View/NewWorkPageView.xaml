@@ -7,11 +7,18 @@
              xmlns:loginModel="clr-namespace:WorkOrganizer.UI.MVVM.ViewModel"
              xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
              xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="800"
              FontFamily="Sitka Banner"
              Foreground="#142426"
              Background="Transparent">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="btv"/>
+    </UserControl.Resources>
     <Border CornerRadius="20"
             Background="#F2D6BD">
         <Grid>
@@ -21,13 +28,21 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
 
             <Separator Grid.Row="0"
                        Grid.ColumnSpan="2"
                        VerticalAlignment="Bottom"
                        />
-
+            <Separator Grid.Row="6"
+                       Grid.ColumnSpan="2"
+                       VerticalAlignment="Bottom"
+                       />
+            <!-- Header -->
             <TextBlock Grid.ColumnSpan="2"
                        Text="Dodawanie nowego zlecenia"
                        VerticalAlignment="Center"
@@ -35,6 +50,7 @@
                        FontSize="20"
                        FontWeight="Bold"
                        Margin="0,10,0,10"/>
+            <!-- Principal selection -->
             <TextBlock 
                    Grid.Row="1"
                    Grid.ColumnSpan="3"
@@ -53,29 +69,187 @@
                 <TextBox Name="NewPrincipalName"
                          Grid.Column="3"
                          VerticalAlignment="Center"
-                         Margin="20,0,20,0"
+                         Margin="20,0,120,0"
+                         Height="25"
                          Style="{StaticResource LoginTextBox}"
                          Tag="@Wpisz nazwę nowego zleceniodawcy"
                          FontSize="15"
-                         Visibility="{Binding NewPrincipalTextBoxVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding NewPrincipalName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                         Visibility="{Binding IsChecked, ElementName=chkNewPrincipal,Converter={StaticResource btv}}"/>
 
-                <ComboBox 
-                      Margin="30,0,0,0"
-                      Width="300"
-                      VerticalAlignment="Center"
-                      HorizontalAlignment="Left"
-                      Background="Transparent"
-                      Visibility="{Binding CboPrincipalVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                </ComboBox>
-                
-                <Button Grid.Column="1"
+                <CheckBox Grid.Column="1"
                         Height="30"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Right"
                         Margin="20,0,0,0"
                         ToolTip="Dodaj nowego zleceniodawcę"
+                        Name="chkNewPrincipal"
+                        IsChecked="{Binding NewPrincipalCheck,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    <CheckBox.Style>
+                        <Style TargetType="{x:Type CheckBox}">
+                            <Setter Property="Background" Value="#8C8577"/>
+                            <Setter Property="Foreground" Value="#142426"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="20">
+                                            <fa:ImageAwesome 
+                                                Icon="UserPlus"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                Margin="8"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver" Value="True"/>
+                                        <Condition Property="IsChecked" Value="False"/>
+                                    </MultiTrigger.Conditions>
+                                    <MultiTrigger.Setters>
+                                        <Setter Property="Button.Background" Value="#142426"/>
+                                        <Setter Property="Button.Foreground" Value="#8C8577"/>
+                                    </MultiTrigger.Setters>
+                                </MultiTrigger>
+
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver" Value="True"/>
+                                        <Condition Property="IsChecked" Value="true"/>
+                                    </MultiTrigger.Conditions>
+                                    <MultiTrigger.Setters>
+                                        <Setter Property="Background" Value="#8C8577"/>
+                                        <Setter Property="Foreground" Value="#142426"/>
+                                    </MultiTrigger.Setters>
+                                </MultiTrigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Button.Background" Value="#142426"/>
+                                    <Setter Property="Button.Foreground" Value="#8C8577"/>
+                                </Trigger>
+
+                                <Trigger Property="IsChecked" Value="False">
+                                    <Setter Property="Background" Value="#8C8577"/>
+                                    <Setter Property="Foreground" Value="#142426"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </CheckBox.Style>
+                </CheckBox>
+        
+                <Border Background="Transparent"
+                        BorderBrush="Transparent">
+                    <ComboBox 
+                      Margin="30,0,0,0"
+                      Width="300"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Left"
+                      Background="Gray"
+                      Height="25"
+                      Name="cboPrincipalName"
+                      DisplayMemberPath="Name"
+                      FontSize="15"
+                      Foreground="#F2D6BD"
+                      FontWeight="SemiBold"
+                      ItemsSource="{Binding PrincipalList}"
+                      SelectedItem="{Binding SelectedPrincipal,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                      Style="{StaticResource theComboBox}"/>
+                    <Border.Style>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsChecked, ElementName=chkNewPrincipal}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+            </Grid>
+    
+            <!-- Work Name -->
+            <TextBlock 
+                   Grid.Row="3"
+                   Grid.ColumnSpan="3"
+                   Text="Wpisz nazwę zlecenia:"
+                   FontSize="20"
+                   Margin="30,10,10,10"
+                   Foreground="#142426"
+                   FontWeight="SemiBold"/>
+
+            <TextBox    
+                Name="NewWorkName"
+                Grid.Row="4"
+                Grid.Column="1"
+                Height="25"
+                VerticalAlignment="Center"
+                Margin="20,0,120,0"
+                Style="{StaticResource LoginTextBox}"
+                Tag="@Wpisz nazwę zlecenia"
+                Text="{Binding NewWorkName, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                FontSize="15"/>
+    
+            <!-- Work Components -->
+            <TextBlock 
+                   Grid.Row="5"
+                   Grid.ColumnSpan="3"
+                   Text="Szczegóły zlecenia:"
+                   FontSize="20"
+                   Margin="30,10,0,10"
+                   Foreground="#142426"
+                   FontWeight="SemiBold"/>
+            <Grid Grid.Row="6">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Work Type selections and add -->
+                <ListView Grid.Row="0"
+                      Grid.ColumnSpan="2"
+                      Margin="30,10,30,10"
+                      Background="Transparent"
+                      FontSize="15"
+                      Foreground="#142426"
+                      SelectionMode="Multiple"
+                      ItemsSource="{Binding WorkTypesList}"
+                      Name="lstWorktypes">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="True" ColumnHeaderToolTip="Elementy">
+                            <GridViewColumn Header="Rodzaj" DisplayMemberBinding="{Binding Name}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <TextBox    
+                Name="NewWorkTypeName"
+                Grid.Row="1"
+                Grid.Column="1"
+                Height="25"
+                VerticalAlignment="Center"
+                Margin="20,0,120,20"
+                Style="{StaticResource LoginTextBox}"
+                Tag="@Wpisz nazwę nowego typu zlecenia"
+                Text="{Binding NewWorkTypeName, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                FontSize="15"/>
+
+                <Button Grid.Column="0"
+                        Grid.Row="1"
+                        Height="30"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Margin="30,0,0,20"
+                        ToolTip="Dodan nowe zlecenie"
                         Name="AddNewWork"
-                        Command="{Binding showNewPrincipalCommand}">
+                        Click="AddNewWork_Click">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}">
                             <Setter Property="Background" Value="#8C8577"/>
@@ -86,7 +260,7 @@
                                         <Border Background="{TemplateBinding Background}"
                                                 CornerRadius="20">
                                             <fa:ImageAwesome 
-                                                Icon="UserPlus"
+                                                Icon="Plus"
                                                 Foreground="{TemplateBinding Foreground}"
                                                 Margin="8"/>
                                         </Border>
@@ -103,7 +277,109 @@
                         </Style>
                     </Button.Style>
                 </Button>
+                <StackPanel Grid.Column="2">
+                    <!-- Date selection-->
+                    <TextBlock Text="Wybierz termin planowego zakończenia:"
+                       Margin="10,0,5,5"
+                       Foreground="Black"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       FontStyle="Italic"
+                       VerticalAlignment="Top"/>
+                    <DatePicker
+                      Grid.Column="2"
+                      Grid.Row="1"
+                      Grid.ColumnSpan="4"
+                      Width="157"
+                      Height="30"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                      Text="Wybierz termin wykonania"
+                      Margin="10,0,0,0"
+                      SelectedDate="{x:Static sys:DateTime.Now}"
+                      Name="dateWorkEndDate"
+                      Background="Transparent"
+                      Foreground="#F2D6BD">
+                        <DatePicker.Style>
+                            <Style TargetType="{x:Type DatePicker}">
+                                <Style.Resources>
+                                    <Style TargetType="DatePickerTextBox">
+                                        <Setter Property="Background" Value="#142426"/>
+                                    </Style>
+                                </Style.Resources>
+                            </Style>
+                        </DatePicker.Style>
+                    </DatePicker>
+
+                    <!-- Work Color selection -->
+                    <TextBlock Text="Wybierz kolor zlecenia:"
+                       Margin="10,0,5,5"
+                       Foreground="Black"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       FontStyle="Italic"
+                       VerticalAlignment="Top"/>
+                    <colorpicker:PortableColorPicker 
+                        Width="30" Height="30"
+                        HorizontalAlignment="Left"
+                        Margin="15,0,0,0"
+                        Style="{StaticResource DefaultColorPickerStyle}"
+                        SelectedColor="{Binding SelectedColor,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
             </Grid>
+    
+            <!-- Add work button -->
+            <Button     Grid.Column="0"
+                        Grid.Row="7"
+                        Height="30"
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        Margin="120,10,120,20"
+                        ToolTip="Dodan nowe zlecenie"
+                        Name="InsertNewWork"
+                        Click="InsertNewWork_Click">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="#8C8577"/>
+                        <Setter Property="Foreground" Value="#142426"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+
+                                    <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="20">
+                                        <TextBlock
+                                                    Grid.Column="1"
+                                                    Text="Dodaj nowe zlecenie"
+                                                    FontWeight="SemiBold"
+                                                    Margin="10,0,0,0"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"
+                                                    Height="15"
+                                                    Foreground="{TemplateBinding Foreground}"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Button.Background" Value="#142426"/>
+                                <Setter Property="Button.Foreground" Value="#8C8577"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <!-- Lbl info -->
+            <TextBlock Grid.Row="8"
+                       Text="Testowee"
+                       Margin="20,0,0,10"
+                       FontSize="15"
+                       Foreground="#8C8577"
+                       Name="lblInfo"
+                       Visibility="Collapsed"/>
+
         </Grid>
     </Border>
 </UserControl>

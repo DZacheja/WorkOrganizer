@@ -1,7 +1,10 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using WorkOrganizer.UI.MVVM.ViewModel;
 
 namespace WorkOrganizer.UI.MVVM.View {
@@ -38,8 +41,28 @@ namespace WorkOrganizer.UI.MVVM.View {
             viewModel.UpdateChange();
         }
 
-        private void AddNewTask_Click(object sender, RoutedEventArgs e) {
-            viewModel.InsertingNewTask(dateNewTaskDeadline.SelectedDate);
+        private async void AddNewTask_Click(object sender, RoutedEventArgs e) {
+            try {
+                await viewModel.InsertingNewTask(dateNewTaskDeadline.SelectedDate);
+                await showLblInfo("Pomyślnie dodano zadanie!", "#00cc00");
+            } catch (Exception ex) {
+                await showLblInfo(ex.Message, "#DC143C");
+            }
         }
+
+        private async Task showLblInfo(string txt, string color) {
+            _ = Task.Run(() => {
+                this.lblInfo.Dispatcher.Invoke(new Action(async () => {
+                    this.lblInfo.Text = txt;
+                    var bc = new BrushConverter();
+                    this.lblInfo.Foreground = (Brush)bc.ConvertFrom(color);
+                    this.lblInfo.Visibility = System.Windows.Visibility.Visible;
+                    await Task.Delay(3000);
+                    this.lblInfo.Visibility = System.Windows.Visibility.Collapsed;
+                }));
+            });
+
+        }
+
     }
 }

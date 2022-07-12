@@ -31,6 +31,7 @@ namespace DatabaseConnection {
                 us.HasMany(m => m.Messages)
                 .WithOne(u => u.Authors)
                 .HasForeignKey(a => a.AuthorsId);
+
             });
             //Message
 
@@ -69,6 +70,15 @@ namespace DatabaseConnection {
             modelBuilder.Entity<ToDoTask>().Property(x => x.Status).HasDefaultValue(false);
 
             modelBuilder.Entity<Message>().Property(w => w.Created).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Work>().Property(x => x.StartDate).HasDefaultValueSql("now()");
+
+            modelBuilder.Entity<Message>().Property(x => x.MessageId).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Principal>().Property(x => x.PrincipalID).ValueGeneratedOnAdd();
+            modelBuilder.Entity<ToDoTask>().Property(x => x.ToDoTaskID).ValueGeneratedOnAdd();
+            modelBuilder.Entity<User>().Property(x => x.UserID).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Work>().Property(x => x.WorkId).ValueGeneratedOnAdd();
+            modelBuilder.Entity<WorkComponent>().Property(x => x.ComponentId).ValueGeneratedOnAdd();
+            modelBuilder.Entity<WorkType>().Property(x => x.Id).ValueGeneratedOnAdd();
         }
 
 

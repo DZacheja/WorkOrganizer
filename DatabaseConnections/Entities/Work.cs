@@ -7,7 +7,8 @@ namespace DatabaseConnection.Entities {
     public class Work {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int WorkId { get; set; }
+        [Column(Order = 1, TypeName = "serial")]
+        public int? WorkId { get; set; }
         public string Name { get; set; }
         public string ColorHTML { get; set; }
         public DateTime StartDate { get; set; }

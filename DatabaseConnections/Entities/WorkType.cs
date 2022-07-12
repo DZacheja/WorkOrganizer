@@ -6,7 +6,8 @@ namespace DatabaseConnection.Entities {
     public class WorkType {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        [Column(Order = 1, TypeName = "serial")]
+        public int? Id { get; set; }
         public string Name { get; set; }
 
         public List<Work> Works { get; set; } = new List<Work>();

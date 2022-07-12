@@ -3,14 +3,11 @@ using DatabaseConnection.Entities;
 using Microsoft.EntityFrameworkCore;
 using ModernDesign.Core;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using WorkOrganizer.UI.Core;
 
 namespace WorkOrganizer.UI.MVVM.ViewModel {
@@ -63,38 +60,46 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
 
         #region add new Task
 
-        public async void InsertingNewTask(DateTime? deadline) {
+        public async Task InsertingNewTask(DateTime? deadline) {
             if (_newTaskText != null &&
                 deadline != null &&
-                ProgramSettings.currentWorkComponent != null) {
+                ProgramSettings.currentWorkComponent != null
+                && ProgramSettings.currentUser != null) {
 
                 DateTime utc = (DateTime)deadline;
                 utc = utc.ToUniversalTime();
                 ToDoTask newTask = new ToDoTask() {
-                    AuthorsID = 1,
-                    ComponentsId = ProgramSettings.currentWorkComponent.ComponentId,
+                    AuthorsID = (int)ProgramSettings.currentUser.UserID,
+                    ComponentsId = (int)ProgramSettings.currentWorkComponent.ComponentId,
                     Content = _newTaskText,
                     Status = false,
                     Deadline = utc
                 };
                 dbContext = new WorkOrganizerContext();
-                using (dbContext) {
-                    
-                    dbContext.Tasks.Add(newTask);
+                try {
+                    using (dbContext) {
 
-                    var ok = await dbContext.SaveChangesAsync();
+                        dbContext.Tasks.Add(newTask);
 
-                    if (ok > 0) {
+                        var ok = await dbContext.SaveChangesAsync();
 
-                        var tsk = await dbContext.Tasks
-                            .Include(a => a.Authors)
-                            .Include(x => x.Component).ThenInclude(x => x.Works)
-                            .Include(x => x.Component).ThenInclude(x => x.WorkTypes)
-                            .FirstOrDefaultAsync(x => x.ToDoTaskID == newTask.ToDoTaskID);
-                        Tasks.Add(newTask);
+                        if (ok > 0) {
+
+                            var tsk = await dbContext.Tasks
+                                .Include(a => a.Authors)
+                                .Include(x => x.Component).ThenInclude(x => x.Works)
+                                .Include(x => x.Component).ThenInclude(x => x.WorkTypes)
+                                .FirstOrDefaultAsync(x => x.ToDoTaskID == newTask.ToDoTaskID);
+                            Tasks.Add(newTask);
+                            NewTaskText = "";
+                        }
+
                     }
-                    
+                } catch (Exception) {
+                    throw new Exception("Błąd podczas dodawania zadania!");
                 }
+            } else {
+                throw new Exception("Wybierz rodzaj roboty, dla której dodać zadanie");
             }
         }
 

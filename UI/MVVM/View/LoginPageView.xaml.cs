@@ -53,7 +53,7 @@ namespace WorkOrganizer.UI.MVVM.View {
                 await showLblInfo("Pomyślnie utworzono nowe konto, można się teraz zalogować", "#DC143C");
                 NewAccount_Click(this, e);
             } catch (System.Exception ex) {
-                await showLblInfo(ex.Message, "##00cc00");
+                await showLblInfo(ex.Message, "#00cc00");
             }
         }
         private async Task showLblInfo(string txt, string color) {

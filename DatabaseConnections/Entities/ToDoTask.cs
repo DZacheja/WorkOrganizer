@@ -16,6 +16,7 @@ namespace DatabaseConnection.Entities {
         public event PropertyChangedEventHandler PropertyChanged;
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(Order = 1, TypeName = "serial")]
         public int ToDoTaskID { get; set; }
 
         public string Content { get; set; }
