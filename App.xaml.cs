@@ -14,7 +14,7 @@ namespace WorkOrganizer {
     /// </summary>
     public partial class App : Application {
         protected override void OnStartup(StartupEventArgs e) {
-            MainModel mainModel = new MainModel();
+            MainModel mainModel = MainModel.Instance;
             MainWindow = new MainWindow() {
                 DataContext = mainModel
             };

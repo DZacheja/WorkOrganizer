@@ -3,6 +3,7 @@ using DatabaseConnection.Entities;
 using Microsoft.EntityFrameworkCore;
 using ModernDesign.Core;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -38,7 +39,7 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
         /// </summary>
         private TaskViewModel() {
             addNewTaskVisible = Visibility.Collapsed;
-            
+
 
             if (ProgramSettings.TasksTable == null) {
                 dbContext = new WorkOrganizerContext();
@@ -145,6 +146,29 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
 
         #region Select and edit tasks
 
+        private bool _filterOnlyAvtiveTasks;
+
+        public bool FilterOnlyAvtiveTasks {
+            get { return _filterOnlyAvtiveTasks; }
+            set {
+                _filterOnlyAvtiveTasks = value;
+                System.Diagnostics.Debug.WriteLine(FilterOnlyAvtiveTasks);
+                OnPropertyChange();
+            }
+        }
+
+        private string _filterText;
+
+        public string FilterText {
+            get { return _filterText; }
+            set {
+                _filterText = value;
+                OnPropertyChange();
+            }
+        }
+
+
+
         /// <summary>
         /// Collections of tasks
         /// </summary>
@@ -195,24 +219,47 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
 
 
                 if (p.Name != "-") { //Filter by Principal
-                    var x = f.Where(x => x.Component.Works.PrincipalsId == p.PrincipalID);
+                    var x = f.Where(o => o.Component.Works.PrincipalsId == p.PrincipalID);
                     if (w != null) {
                         if (w.Name != "-") { //Filter By Work
-                            x = x.Where(x => x.Component.Works.WorkId == w.WorkId);
+                            x = x.Where(o => o.Component.Works.WorkId == w.WorkId);
                             if (wt != null) {
                                 if (wt.Name != "-") { //Filter By WorkType
-                                    x = x.Where(y => y.Component.WorkTypeId == wt.Id);
+                                    x = x.Where(o => o.Component.WorkTypeId == wt.Id);
 
                                 }
                             }
                         }
                     }
+
+                    if (FilterOnlyAvtiveTasks && (FilterText != null && FilterText != "")) {
+                        x = x.Where(o => o.Status == false).Where(x => x.Content.Contains(FilterText));
+                    } else if (FilterOnlyAvtiveTasks) {
+                        x = x.Where(o => o.Status == false);
+                    } else if (FilterText != null && FilterText != "") {
+                        x = x.Where(o => o.Content.Contains(FilterText));
+                    }
+
                     var res = x.OrderByDescending(o => o.Deadline).ToList();
                     foreach (var task in res) {
                         Tasks.Add(task);
                     }
                 } else {
-                    var res = f.OrderByDescending(o => o.Deadline).ToList();
+                    IQueryable<ToDoTask>? fs = null;
+                    if (FilterOnlyAvtiveTasks && (FilterText != null && FilterText != "")) {
+                        fs = f.Where(o=> o.Status == false).Where(x => x.Content.Contains(FilterText));
+                    } else if (FilterOnlyAvtiveTasks) {
+                        fs = f.Where(o => o.Status == false);
+                    } else if (FilterText != null && FilterText != "") {
+                        fs = f.Where(o => o.Content.Contains(FilterText));
+                    }
+                    List<ToDoTask>? res = null;
+
+                    if (fs != null)
+                        res = fs.OrderByDescending(o => o.Deadline).ToList();
+                    else
+                        res = f.OrderByDescending(o => o.Deadline).ToList();
+
                     foreach (var task in res) {
                         Tasks.Add(task);
                     }

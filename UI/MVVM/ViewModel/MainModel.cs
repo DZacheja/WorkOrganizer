@@ -10,17 +10,31 @@ using WorkOrganizer.UI.Core;
 
 namespace WorkOrganizer.UI.MVVM.ViewModel {
     public class MainModel : ObservableObject {
+        private static readonly Lazy<MainModel> instance = new Lazy<MainModel>(() => new MainModel());
+        public static MainModel Instance => instance.Value;
 
         public WorkOrganizerContext dbContext;
+        
+        private object? _currentView;
+        public object? CurrentView {
+            get { return _currentView; }
+            set {
+                _currentView = value;
+                OnPropertyChange();
+            }
+        }
 
         public RelayCommand loginPageCommand { get; set; }
         public RelayCommand taskCommand { get; set; }
         public RelayCommand filterTaskView { get; set; }
         public RelayCommand newWorkCommand { get; set; }
+        public RelayCommand settingsCommand { get; set; }
 
         public LoginPageModel loginPageMV { get; set; }
         public TaskViewModel taskMV { get; set; }
         public NewWorkPageModel newWorkPageMV { get; set; }
+        public SettingsModel settingsMV { get; set; }
+
 
         private string? _currentUserLogged;
 
@@ -53,11 +67,24 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             // ... New Work View ... //
             newWorkPageMV = NewWorkPageModel.Instance();
             newWorkCommand = new RelayCommand(o => {
-                if (CurrentView == newWorkPageMV)
+                if (CurrentView == newWorkPageMV) {
+                    CurrentView = null;
+                } else {
+                    newWorkPageMV.RandColor();
+                    CurrentView = newWorkPageMV;
+                }
+            });
+
+
+            // ... New Settings View ... ///
+            settingsMV = SettingsModel.Instance;
+            settingsCommand = new RelayCommand(o => {
+                if (CurrentView == settingsMV)
                     CurrentView = null;
                 else
-                    CurrentView = newWorkPageMV;
+                    CurrentView = settingsMV;
             });
+
 
             // ...  Fill Comboboxes ...  //
 
@@ -209,19 +236,10 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                     }
                 } else
                     ProgramSettings.currentWorkComponent = null;
-            }else
+            } else
                 ProgramSettings.currentWorkComponent = null;
         }
 
-
-        private object _currentView;
-        public object CurrentView {
-            get { return _currentView; }
-            set {
-                _currentView = value;
-                OnPropertyChange();
-            }
-        }
 
         /// <summary>
         /// Login Visibility
@@ -262,7 +280,9 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
 
 
         private async void CreateFilterForTaskView() {
-            taskMV.FilterByWorkAndWorkType(SelectedWorkType, SelectedPrincipalWork, SelectedPrincipal);
+            if (CurrentView == taskMV) {
+                taskMV.FilterByWorkAndWorkType(SelectedWorkType, SelectedPrincipalWork, SelectedPrincipal);
+            }
         }
 
 

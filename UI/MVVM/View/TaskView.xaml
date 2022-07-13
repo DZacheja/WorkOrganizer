@@ -143,7 +143,7 @@
                         VerticalAlignment="Center"
                         HorizontalAlignment="Right"
                         Margin="0,0,30,0"
-                        ToolTip="Zapisz zmiany"
+                        ToolTip="Dodaj nowe zadanie do listy"
                         Click="AddNewTask_Click">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}">

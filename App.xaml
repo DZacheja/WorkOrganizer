@@ -10,7 +10,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="UI/Theme/MenuButtonTheme.xaml"/>
                 <ResourceDictionary Source="UI/Theme/LoginViewTextBox.xaml"/>
-                <ResourceDictionary Source="UI/Theme/CustomButton.xaml"/>
                 <ResourceDictionary Source="UI/Theme/TaskCardElement.xaml"/>
                 <ResourceDictionary Source="UI/Theme/NewTaskTextBox.xaml"/>
                 <ResourceDictionary Source="UI/Theme/StyledScrollBar.xaml"/>
@@ -29,6 +28,11 @@
             <DataTemplate DataType="{x:Type viewModel:NewWorkPageModel}">
                 <view:NewWorkPageView/>
             </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type viewModel:SettingsModel}">
+                <view:SettingsView/>
+            </DataTemplate>
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

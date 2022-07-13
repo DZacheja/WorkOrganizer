@@ -22,9 +22,11 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
         }
 
         private NewWorkPageModel() {
+            RandColor();
             dbContext = new WorkOrganizerContext();
             SelectedWorkTypes = new List<WorkType>();
             PrincipalList = new ObservableCollection<Principal>();
+            
             using (dbContext) {
                 var principals = dbContext.Principals.ToList();
                 foreach (var principal in principals) {
@@ -39,7 +41,12 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             }
         }
 
-
+        public void RandColor() {
+            var r = new Random();
+            var bytes = new byte[3];
+            r.NextBytes(bytes);
+            SelectedColor = Color.FromRgb(bytes[0], bytes[1], bytes[2]);
+        }
 
         /// <summary>
         /// Principal selection
