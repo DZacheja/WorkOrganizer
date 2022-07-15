@@ -7,7 +7,6 @@ namespace DatabaseConnection.Entities {
     public class WorkComponent {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column(Order = 1, TypeName = "serial")]
         public int? ComponentId { get; set; }
 
         public List<ToDoTask> Tasks { get; set; }

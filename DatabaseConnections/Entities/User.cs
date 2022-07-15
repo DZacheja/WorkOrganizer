@@ -7,7 +7,6 @@ namespace DatabaseConnection.Entities {
     public class User {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column(Order = 1, TypeName = "serial")]
         public int? UserID { get; set; }
         public string UserLogin { get; set; }
         public string Password { get; set; }

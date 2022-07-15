@@ -12,9 +12,11 @@
         AllowsTransparency="True"
         Background="Transparent"
         ResizeMode="CanResizeWithGrip" RenderTransformOrigin="0.5,0.5">
+    <!--
     <Window.DataContext>
         <viewModel:MainModel/>
     </Window.DataContext>
+    -->
     <Border CornerRadius="25"
             Background="#142426">
         <Grid>
@@ -129,8 +131,9 @@
                                Visibility="{Binding OtherButtonsVilibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     </TextBlock>
                 </Grid>
+
                 <ContentControl Grid.Column="1"
-                                Margin="10"
+                    Margin="10"
                                 Content="{Binding CurrentView}">
                 </ContentControl>
                 <!-- Right Menu -->
@@ -169,7 +172,7 @@
                                   Style="{StaticResource theComboBox}"
                                   DisplayMemberPath="Name"
                                   SelectedItem="{Binding SelectedPrincipal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            
+
                             <!-- Filter Work Name -->
                             <TextBlock Text="Robota" 
                                    Margin="5"/>
@@ -182,7 +185,7 @@
                                   Height="25"
                                   Style="{StaticResource theComboBox}"
                                   SelectedItem="{Binding SelectedPrincipalWork, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            
+
                             <!-- Filter Work Type -->
                             <TextBlock Text="Rodzaj" 
                                    Margin="5"/>
@@ -195,7 +198,7 @@
                                   Height="25"
                                   Style="{StaticResource theComboBox}"
                                   SelectedItem="{Binding SelectedWorkType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            
+
                             <!-- Filter Active Tasks -->
                             <StackPanel Orientation="Horizontal">
                                 <CheckBox Height="15"
@@ -242,9 +245,9 @@
                                 </CheckBox>
                                 <TextBlock Text="Aktywne zadania"
                                            Margin="10,0,15,0">
-                                    
+
                                 </TextBlock>
-                                
+
                             </StackPanel>
                             <!-- Filter text -->
                             <TextBox Margin="10,5,10,0"
@@ -253,7 +256,7 @@
                                      Tag="@Filtruj tekst"
                                      DataContext="{Binding taskMV}"
                                      Text="{Binding FilterText}"/>
-                            
+
                             <!--Applay selected filters-->
                             <Separator HorizontalAlignment="Stretch"
                                        BorderBrush="#142426"

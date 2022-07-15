@@ -16,6 +16,7 @@ namespace DatabaseConnection {
         public DbSet<WorkType> WorkTypes { get; set; }
         public DbSet<ToDoTask> Tasks { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Subtask> Subtasks { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             //optionsBuilder.UseNpgsql(@"Server=localhost;Database=DatabaseWorkOrganizerDb;Port=5432;User Id=postgres;Password=admin");
@@ -32,6 +33,7 @@ namespace DatabaseConnection {
                 .WithOne(u => u.Authors)
                 .HasForeignKey(a => a.AuthorsId);
 
+                us.Property(x => x.UserID).ValueGeneratedOnAdd();
             });
             //Message
 
@@ -40,10 +42,23 @@ namespace DatabaseConnection {
                 p.HasMany(w => w.Works)
                     .WithOne(w => w.Principals)
                     .HasForeignKey(p => p.PrincipalsId);
+                p.Property(x => x.PrincipalID).ValueGeneratedOnAdd();
+            });
+
+            //ToDoTask table
+            modelBuilder.Entity<ToDoTask>(e => { 
+                e.Property(x => x.Status).HasDefaultValue(false);
+
+                e.HasMany(x => x.Subtaskas)
+                .WithOne(x => x.MainTask)
+                .HasForeignKey(x => x.MainTaskID);
+
+                e.Property(x => x.ToDoTaskID).ValueGeneratedOnAdd();
             });
 
             //Works tabel
-            modelBuilder.Entity<Work>().HasMany(w => w.Components)
+            modelBuilder.Entity<Work>(x => {
+                x.HasMany(w => w.Components)
                 .WithMany(w => w.Works)
                 .UsingEntity<WorkComponent>(
                 w => w.HasOne(wi => wi.WorkTypes)
@@ -54,6 +69,11 @@ namespace DatabaseConnection {
                 .WithMany()
                 .HasForeignKey(wi => wi.WorkId)
                 );
+
+                x.Property(x => x.StartDate).HasDefaultValueSql("now()");
+                x.Property(x => x.WorkId).ValueGeneratedOnAdd();
+
+            });
 
             //Work Component
             modelBuilder.Entity<WorkComponent>(wc => {
@@ -67,18 +87,15 @@ namespace DatabaseConnection {
 
             });
 
-            modelBuilder.Entity<ToDoTask>().Property(x => x.Status).HasDefaultValue(false);
 
-            modelBuilder.Entity<Message>().Property(w => w.Created).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Work>().Property(x => x.StartDate).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Message>(m => {
+                m.Property(w => w.Created).HasDefaultValueSql("now()");
+                m.Property(x => x.MessageId).ValueGeneratedOnAdd();
+            });
 
-            modelBuilder.Entity<Message>().Property(x => x.MessageId).ValueGeneratedOnAdd();
-            modelBuilder.Entity<Principal>().Property(x => x.PrincipalID).ValueGeneratedOnAdd();
-            modelBuilder.Entity<ToDoTask>().Property(x => x.ToDoTaskID).ValueGeneratedOnAdd();
-            modelBuilder.Entity<User>().Property(x => x.UserID).ValueGeneratedOnAdd();
-            modelBuilder.Entity<Work>().Property(x => x.WorkId).ValueGeneratedOnAdd();
             modelBuilder.Entity<WorkComponent>().Property(x => x.ComponentId).ValueGeneratedOnAdd();
             modelBuilder.Entity<WorkType>().Property(x => x.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Subtask>().Property(x => x.Id).ValueGeneratedOnAdd();
         }
 
 

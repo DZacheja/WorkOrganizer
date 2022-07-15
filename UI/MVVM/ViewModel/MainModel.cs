@@ -5,7 +5,10 @@ using ModernDesign.Core;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Threading;
 using WorkOrganizer.UI.Core;
 
 namespace WorkOrganizer.UI.MVVM.ViewModel {
@@ -14,7 +17,7 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
         public static MainModel Instance => instance.Value;
 
         public WorkOrganizerContext dbContext;
-        
+
         private object? _currentView;
         public object? CurrentView {
             get { return _currentView; }
@@ -50,7 +53,7 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
         /// <summary>
         /// Constructor
         /// </summary>
-        public MainModel() {
+        private MainModel() {
             dbContext = new WorkOrganizerContext();
             // ...  Login Page ...  //
             loginPageMV = LoginPageModel.GetInstance();
@@ -283,6 +286,53 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             if (CurrentView == taskMV) {
                 taskMV.FilterByWorkAndWorkType(SelectedWorkType, SelectedPrincipalWork, SelectedPrincipal);
             }
+        }
+
+
+        /// <summary>
+        /// LBL info
+        /// </summary>
+        private Visibility? _lblInfoVisibility = Visibility.Collapsed;
+        public Visibility? lblInfoVisibility {
+            get { return _lblInfoVisibility; }
+            set {
+                if (_lblInfoVisibility != value)
+                    _lblInfoVisibility = value;
+                OnPropertyChange();
+            }
+        }
+
+
+        private string? _lblInfoText;
+
+        public string? LblInfoText {
+            get { return _lblInfoText; }
+            set {
+                _lblInfoText = value;
+                LblInfoText = "";
+            }
+        }
+
+        private Brush _lblInfoColor;
+
+        public Brush LblInfoColor {
+            get { return _lblInfoColor; }
+            set {
+                _lblInfoColor = value;
+                OnPropertyChange();
+            }
+        }
+
+
+        public async Task showLblInfo(string txt, string color) {
+            _ = Dispatcher.CurrentDispatcher.Invoke(async () => {
+                _lblInfoText = txt;
+                var bc = new BrushConverter();
+                LblInfoColor = (Brush)bc.ConvertFrom(color);
+                lblInfoVisibility = System.Windows.Visibility.Visible;
+                await Task.Delay(3000);
+                lblInfoVisibility = System.Windows.Visibility.Collapsed;
+            });
         }
 
 

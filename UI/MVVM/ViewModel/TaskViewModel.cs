@@ -46,6 +46,7 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                 var tsk = dbContext.Tasks.Include(a => a.Authors)
                 .Include(x => x.Component).ThenInclude(x => x.Works)
                 .Include(x => x.Component).ThenInclude(x => x.WorkTypes)
+                .Include(x => x.Subtaskas)
                 .OrderByDescending(o => o.Deadline).ToList();
                 Tasks = new ObservableCollection<ToDoTask>();
                 foreach (var task in tsk) {
@@ -90,6 +91,7 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                                 .Include(a => a.Authors)
                                 .Include(x => x.Component).ThenInclude(x => x.Works)
                                 .Include(x => x.Component).ThenInclude(x => x.WorkTypes)
+                                .Include(x => x.Subtaskas)
                                 .FirstOrDefaultAsync(x => x.ToDoTaskID == newTask.ToDoTaskID);
                             Tasks.Add(newTask);
                             NewTaskText = "";
@@ -200,6 +202,19 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             }
         }
 
+        /// <summary>
+        /// Selected task
+        /// </summary>
+        private Subtask? _selectedSubTask;
+
+        public Subtask? SelectedSubTask {
+            get { return _selectedSubTask; }
+            set {
+                _selectedSubTask = value;
+                OnPropertyChange();
+            }
+        }
+
 
         /// <summary>
         /// Insert new filter to listview and get data from database
@@ -214,6 +229,7 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
 
                 var f = dbContext.Tasks
                     .Include(a => a.Authors)
+                    .Include(x => x.Subtaskas)
                     .Include(x => x.Component).ThenInclude(x => x.Works)
                     .Include(x => x.Component).ThenInclude(x => x.WorkTypes);
 

@@ -3,9 +3,11 @@ using Newtonsoft.Json;
 using System;
 using System.Configuration;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using WorkOrganizer.UI.Core;
 using WorkOrganizer.UI.MVVM.ViewModel;
 

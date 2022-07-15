@@ -1,6 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity">
+                    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+                    xmlns:fa="http://schemas.fontawesome.io/icons/"
+                    xmlns:e="clr-namespace:WorkOrganizer.UI.DataConvert">
+    <e:ListToObservableList x:Key="lstConvert"/>
+    <e:AnySubitemsForTask x:Key="anySubitems"/>
+    <BooleanToVisibilityConverter x:Key="btv"/>
+
     <Style TargetType="ListViewItem" x:Key="TaskCardElement">
         <Setter Property="Opacity" Value="1"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -17,10 +23,12 @@
                                 <RowDefinition/>
                                 <RowDefinition/>
                                 <RowDefinition/>
+                                <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Row="0"
@@ -53,23 +61,25 @@
                                        Margin="5,0,0,0"
                                        Text="{Binding Deadline, StringFormat='Termin: {0:dd-MM-yyyy}'}"
                                        Foreground="White"/>
-                            <CheckBox Grid.Row="3"
-                                      Margin="3"
+                            <CheckBox Grid.Row="2"
+                                      Margin="0"
                                       VerticalAlignment="Center"
                                       Background="Beige"
                                       IsChecked="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      IsEnabled="False"
-                                      Visibility="Collapsed">
+                                      Visibility="{Binding Subtaskas, Converter={StaticResource anySubitems}}"
+                                      Name="mainChk">
                             </CheckBox>
                             <Border Grid.Row="2"
                                     Grid.Column="0"
-                                    Grid.ColumnSpan="4"
+                                    Grid.ColumnSpan="3"
                                     Background="{Binding Component.Works.ColorHTML}"
                                     CornerRadius="10"
                                     BorderThickness="1"
                                     BorderBrush="#F2D6BD"
-                                    Margin="0,5,0,0">
-                                <StackPanel Orientation="Vertical"
+                                    Margin="25,5,0,0"
+                                    Name="brd"                                    
+                                    VerticalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal"
                                             HorizontalAlignment="Stretch">
                                     <TextBlock VerticalAlignment="Center"
                                            Margin="10,5,10,5"
@@ -79,6 +89,86 @@
                                            Foreground="White"/>
                                 </StackPanel>
                             </Border>
+                            <CheckBox Grid.Column="4"
+                                    Grid.Row="2"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right"
+                                    Height="20"
+                                    Width="20"
+                                    Margin="5,5,0,0"
+                                    Name="chkSubtasks">
+                                <CheckBox.Style>
+                                    <Style TargetType="{x:Type CheckBox}">
+                                        <Setter Property="Background" Value="#8C8577"/>
+                                        <Setter Property="Foreground" Value="#142426"/>
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type CheckBox}">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="10">
+                                                        <fa:ImageAwesome 
+                                                Icon="CaretDown"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                Margin="5"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Visibility, ElementName=mainChk}" Value="Visible">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Button.Background" Value="#142426"/>
+                                                <Setter Property="Button.Foreground" Value="#8C8577"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+
+                                    </Style>
+                                </CheckBox.Style>
+                            </CheckBox>
+
+                            <ListView Background="Transparent"
+                                      Grid.Row="4"
+                                      Grid.Column="0"
+                                      Margin="40,0,0,0"
+                                      Grid.ColumnSpan="4"
+                                      ItemsSource="{Binding Subtaskas, Converter={StaticResource lstConvert}}"
+                                      VerticalAlignment="Stretch"
+                                      Visibility="{Binding IsChecked, ElementName=chkSubtasks,Converter={StaticResource btv}}"
+                                      SelectedItem="{Binding Path=DataContext.SelectedSubTask,
+                                                    RelativeSource={RelativeSource AncestorType=UserControl},
+                                                    Mode=Default}">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate>
+                                                    <Border BorderBrush="#F2D6BD"
+                                                            BorderThickness="0.5"
+                                                            CornerRadius="3"
+                                                            Margin="3">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <CheckBox IsChecked="{Binding Path=Status}">
+
+                                                            </CheckBox>
+                                                            <TextBlock Margin="10,0,0,0"
+                                                                Text="{Binding Path=Content}"
+                                                                       Foreground="White"
+                                                                       FontSize="15">
+
+                                                            </TextBlock>
+
+                                                        </StackPanel>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
                         </Grid>
                         <StackPanel.Style>
                             <Style>

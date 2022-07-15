@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using WorkOrganizer.UI.MVVM.ViewModel;
 
 namespace DatabaseConnection.Entities {
     public class ToDoTask : INotifyPropertyChanged {
@@ -16,7 +17,6 @@ namespace DatabaseConnection.Entities {
         public event PropertyChangedEventHandler PropertyChanged;
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column(Order = 1, TypeName = "serial")]
         public int ToDoTaskID { get; set; }
 
         public string Content { get; set; }
@@ -28,6 +28,10 @@ namespace DatabaseConnection.Entities {
                 status = value;
                 // Call OnPropertyChanged whenever the property is updated
                 OnPropertyChanged();
+                new Task(async () => {
+                    await UpdateStatus();
+                }).Start();
+
             }
         }
         public WorkComponent Component { get; set; }
@@ -39,5 +43,36 @@ namespace DatabaseConnection.Entities {
         protected void OnPropertyChanged([CallerMemberName] string name = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
+        private List<Subtask> _subtasks = new List<Subtask>();
+
+        public List<Subtask> Subtaskas {
+            get { return _subtasks; }
+            set {
+                _subtasks = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private async Task UpdateStatus() {
+            try {
+                if (ToDoTaskID != null) {
+                    WorkOrganizerContext context = new WorkOrganizerContext();
+                    using (context) {
+                        var thisObject = context.Tasks.FirstOrDefault(x => x.ToDoTaskID == this.ToDoTaskID);
+                        if (thisObject != null) {
+                            thisObject.Status = this.status;
+                            await context.SaveChangesAsync();
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                MainModel m = MainModel.Instance;
+                await m.showLblInfo("Błąd podczas aktualizacji!", "#00cc00");
+            }
+
+        }
+
     }
 }
