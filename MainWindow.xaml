@@ -69,7 +69,7 @@
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="150"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition />
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
@@ -133,7 +133,9 @@
                 </Grid>
 
                 <ContentControl Grid.Column="1"
-                    Margin="10"
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch"
+                                Margin="10"
                                 Content="{Binding CurrentView}">
                 </ContentControl>
                 <!-- Right Menu -->
@@ -143,12 +145,14 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock VerticalAlignment="Top"
                            HorizontalAlignment="Center"
-                           Text="Konfiguracja"
-                           FontSize="20"
+                           Text="Filtrowanie"
+                           FontSize="15"
                            Foreground="Wheat"
                            Margin="10"/>
                     <!-- Filters -->
@@ -251,7 +255,7 @@
                             </StackPanel>
                             <!-- Filter text -->
                             <TextBox Margin="10,5,10,0"
-                                     Style="{StaticResource LoginTextBox}"
+                                     Style="{StaticResource LightTextBox}"
                                      TextWrapping="Wrap"
                                      Tag="@Filtruj tekst"
                                      DataContext="{Binding taskMV}"
@@ -262,14 +266,30 @@
                                        BorderBrush="#142426"
                                        BorderThickness="2"
                                        Margin="2,10,10,2"/>
-                            <Button Margin="5"
-                                Height="20"
-                                Width="40"
-                                fa:Awesome.Content ="Filter"
-                                Foreground="#2E5159"
-                                Background="#D9BEA7"
-                                Command="{Binding filterTaskView}">
+                            <Grid>
+                                <Button Margin="20,5,5,5"
+                                    Height="20"
+                                    Width="40"
+                                    fa:Awesome.Content ="Filter"
+                                    Foreground="#2E5159"
+                                    Background="#D9BEA7"
+                                    HorizontalAlignment="Left"
+                                    ToolTip="Filtruj"
+                                    Command="{Binding filterTaskView}">
                             </Button>
+                                
+                                <Button Margin="0,5,20,5"
+                                    Height="20"
+                                    Width="40"
+                                    fa:Awesome.Content ="Star"
+                                    Foreground="#2E5159"
+                                    Background="#D9BEA7"
+                                    ToolTip="Zapisz filtr w ulubionych"
+                                    HorizontalAlignment="Right"
+                                    Command="{Binding saveFavoriteFilter}">
+                                </Button>
+
+                            </Grid>
                         </StackPanel>
                     </Border >
                     <!-- Add new Work element-->
@@ -312,10 +332,40 @@
                             </Style>
                         </Button.Style>
                     </Button>
+                    <StackPanel
+                        Grid.Row="4"
+                        Orientation="Vertical">
+                        
+                        <Separator HorizontalAlignment="Stretch"
+                                   BorderBrush="Wheat"
+                                   BorderThickness="4"
+                                   Margin="3,5,5,3"/>
+                        
+                        <TextBlock
+                           Text="Ulubione Filtry"
+                           FontSize="15"
+                           Foreground="Wheat"
+                           HorizontalAlignment="Center"
+                           Margin="10"/>
+
+                        <ListView
+                            ItemsSource="{Binding FavoriteFiltersList}"
+                            DisplayMemberPath="FilterName"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            BorderBrush="Transparent"
+                            Foreground="#F2D6BD"
+                            SelectedItem="{Binding SelectedFavoriteFilter,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                            PreviewMouseDown="UnselectListViewItem"
+                            KeyDown="RemoveFavoriteItem"
+                            Name="lstFilter">
+                            
+                        </ListView>
+                    </StackPanel>
 
                     <!-- Settinga new Work element-->
                     <Button Grid.Column="2"
-                        Grid.Row="4"
+                        Grid.Row="5"
                         Height="40"
                         Width="50"
                         VerticalAlignment="Bottom"

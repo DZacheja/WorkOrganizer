@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Style TargetType="TextBox" x:Key="NewTaskTextBox">
+    <Style TargetType="TextBox" x:Key="LightTextBox">
         <Setter Property="Foreground" Value="Gray"/>
         <Setter Property="FontWeight" Value="Medium"/>
         <Setter Property="Margin" Value="8"/>
@@ -8,27 +8,16 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
-                    <Border CornerRadius="15"
-                            Background="#142426"
+                    <Border CornerRadius="8"
+                            Background="Gray"
                             BorderThickness="0.5"
-                            BorderBrush="#2E5159">
+                            BorderBrush="DarkGreen">
                         <Grid>
-                            <TextBox VerticalAlignment="Stretch"
-                                     VerticalContentAlignment="Center"
-                                     HorizontalAlignment="Stretch"
-                                     Text="{Binding NewTaskText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     Background="Transparent"
-                                     TextWrapping="Wrap"
-                                     BorderThickness="0"
-                                     Foreground="White"
-                                     Margin="8,0,0,0"
-                                     x:Name="LoginText">
-                            </TextBox>
                             <TextBlock VerticalAlignment="Center"
                                        HorizontalAlignment="Left"
-                                       Foreground="Wheat"
+                                       Foreground="#F2D6BD"
                                        Margin="10,0,0,0"
-                                       Text="@Nowe zadanie">
+                                       Text="{TemplateBinding Tag}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -40,6 +29,17 @@
                                     </Style>
                                 </TextBlock.Style>
                             </TextBlock>
+                            <TextBox VerticalAlignment="Stretch"
+                                     VerticalContentAlignment="Center"
+                                     HorizontalAlignment="Stretch"                                 
+                                     Background="Transparent"
+                                     TextWrapping="Wrap"
+                                     BorderThickness="0"
+                                     Foreground="#F2D6BD"
+                                     Margin="8,0,0,0"
+                                     x:Name="LoginText"
+                                     Text="{Binding Path=Text, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                            </TextBox>
                         </Grid>
                     </Border>
                 </ControlTemplate>

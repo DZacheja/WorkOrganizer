@@ -9,7 +9,7 @@
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="650" d:DesignWidth="800"
              Background="#142426">
 
     <Grid >
@@ -25,11 +25,8 @@
                   SelectedItem="{Binding SelectedTask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                   BorderThickness="0"
                   BorderBrush="Transparent"
-                  VerticalAlignment="Stretch"
-                  HorizontalAlignment="Stretch"
                   Padding="0"
-                  HorizontalContentAlignment="Stretch">
-        </ListView>
+                  MouseDoubleClick="tasksList_PreviewMouseDown"/>
         <Border Width="50"
             Height="50"
             VerticalAlignment="Bottom"
@@ -82,21 +79,22 @@
                 <TextBlock Grid.Row="0"
                        Grid.Column="0"
                        Grid.ColumnSpan="4"
-                           
-                           Text="Dodawanie nowego zadania:"
+                           Text="Dodaj nowe zadanie"
                            Margin="10,15,5,5"
                            Foreground="Black"
                            FontSize="13"
                            FontWeight="SemiBold"
                            FontStyle="Italic"/>
                 <TextBox
+                Tag="@Treść zadania"
+                Text="{Binding NewTaskText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
                 Grid.Row="1"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"
                 Height="30"                
-                Style="{StaticResource NewTaskTextBox}"
+                Style="{StaticResource DarkTextBox}"
                 Background="#F2D6BD"
                 Margin="10,0,10,0"
                 TextWrapping="Wrap"
@@ -138,22 +136,20 @@
                 <StackPanel Grid.Column="0"
                             Grid.Row="4"
                             Grid.ColumnSpan="2"
-                            VerticalAlignment="Stretch"
-                            HorizontalAlignment="Stretch"
-                            Background="Red"
+                            Background="Transparent"
                             Margin="10,10,10,20">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        
+
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        
+
                         <TextBlock 
                             Grid.Row="0"
                        Text="Dodaj podzadania:"
@@ -161,24 +157,70 @@
                        FontSize="13"
                        FontWeight="SemiBold"
                        FontStyle="Italic"/>
-                        <TextBox
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Center"
-                            Style="{StaticResource NewTaskTextBox}"
-                                Background="#F2D6BD"
-                            Margin="10,0,10,5"
-                            TextWrapping="Wrap"
-                            Height="30"/>
+                        <StackPanel Grid.Row="1"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Stretch"
+                                    Margin="2">
 
-                        <ListView Grid.Row="2"
-                              Height="50"
-                              VerticalAlignment="Stretch"
-                              HorizontalAlignment="Stretch"
-                              Background="Aqua">
+                            <Button Grid.Column="0"
+                                    Grid.Row="1"
+                                    Height="30"
+                                    Width="30"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    Margin="10,0,5,0"
+                                    ToolTip="Dodaj nowe zadanie do listy"
+                                    Click="AddNewSubtask">
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}">
+                                        <Setter Property="Background" Value="#8C8577"/>
+                                        <Setter Property="Foreground" Value="#142426"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="20">
+                                                        <fa:ImageAwesome 
+                                                Icon="Plus"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                Margin="8"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
 
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Button.Background" Value="#142426"/>
+                                                <Setter Property="Button.Foreground" Value="#8C8577"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <TextBox
+                            Style="{StaticResource DarkTextBox}"
+                            Tag="@Dodaj nowe podzadanie"
+                            Height="25"
+                            Width="300"
+                            FontStyle="Italic"
+                            Text="{Binding NewSubtaskTekst,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+
+                        <ListView Grid.Row="0"
+                                  Grid.RowSpan="2"
+                                  Grid.Column="1"
+                                  Height="50"
+                                  Margin="5"
+                                  Background="#142426"
+                                  Foreground="#F2D6BD"
+                                  ItemsSource="{Binding NewSubtasksList}"
+                                  Name="ListSubitems"
+                                  KeyDown="ListSubitems_KeyDown">
                         </ListView>
+                       
                     </Grid>
                 </StackPanel>
 

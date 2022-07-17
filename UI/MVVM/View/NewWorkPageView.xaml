@@ -71,7 +71,7 @@
                          VerticalAlignment="Center"
                          Margin="20,0,120,0"
                          Height="25"
-                         Style="{StaticResource LoginTextBox}"
+                         Style="{StaticResource LightTextBox}"
                          Tag="@Wpisz nazwę nowego zleceniodawcy"
                          FontSize="15"
                          Text="{Binding NewPrincipalName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
@@ -186,7 +186,7 @@
                 Height="25"
                 VerticalAlignment="Center"
                 Margin="20,0,120,0"
-                Style="{StaticResource LoginTextBox}"
+                Style="{StaticResource LightTextBox}"
                 Tag="@Wpisz nazwę zlecenia"
                 Text="{Binding NewWorkName, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 FontSize="15"/>
@@ -236,7 +236,7 @@
                 Height="25"
                 VerticalAlignment="Center"
                 Margin="20,0,120,20"
-                Style="{StaticResource LoginTextBox}"
+                Style="{StaticResource LightTextBox}"
                 Tag="@Wpisz nazwę nowego typu zlecenia"
                 Text="{Binding NewWorkTypeName, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 FontSize="15"/>

@@ -1,6 +1,7 @@
 ﻿using DatabaseConnection.Entities;
 using Newtonsoft.Json;
 using System;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using WorkOrganizer.DatabaseConnections.Entities;
 using WorkOrganizer.UI.Core;
 using WorkOrganizer.UI.MVVM.ViewModel;
 
@@ -52,9 +54,31 @@ namespace WorkOrganizer {
             Application.Current.Shutdown();
         }
 
-        private void AddNewWork_Click(object sender, RoutedEventArgs e) {
-            var mm = (MainModel)this.DataContext;
-            
+        private void UnselectListViewItem(object sender, MouseButtonEventArgs e) {
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+            while ((dep != null) && !(dep is ListBoxItem)) {
+                dep = VisualTreeHelper.GetParent(dep);
+            }
+
+            if (dep == null)
+                return;
+
+            ListBoxItem item = (ListBoxItem)dep;
+
+            if (item.IsSelected) {
+                item.IsSelected = !item.IsSelected;
+                e.Handled = true;
+            }
         }
+
+        private void RemoveFavoriteItem(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Delete) {
+                if (lstFilter.SelectedItems.Count > 0) {
+                    MainModel mm = (MainModel)this.DataContext;
+                    mm.RemoveFilter();
+                }
+            }
+        }
+
     }
 }

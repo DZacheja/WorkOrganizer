@@ -13,7 +13,9 @@ namespace DatabaseConnection.Entities {
         public string Name{ get; set; }
         public string Mail { get; set; }
 
-        public List<ToDoTask> ToDoTasks { get; set; }= new List<ToDoTask>();
+        public List<ToDoTask>? ToDoTasks { get; set; }= new List<ToDoTask>();
+        public List<ToDoTask>? ConfirmedTasks { get; set; }
+        public List<Subtask>? ConfirmedSubTasks { get; set; }
         public List<Message> Messages { get; set; } = new List<Message>();
 
     }

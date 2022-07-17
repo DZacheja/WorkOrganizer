@@ -1,0 +1,68 @@
+﻿<Window x:Class="WorkOrganizer.UI.MVVM.View.InputBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WorkOrganizer.UI.MVVM.View"
+        mc:Ignorable="d"
+        BorderThickness="0"
+        WindowStyle="None"
+        Width="500"
+        Height="150"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStartupLocation="CenterScreen">
+    <Border
+        CornerRadius="20"
+        Background="DarkGray"
+        MouseDown="Border_MouseDown">
+        <StackPanel Margin="10"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch">
+            <TextBlock 
+                FontSize="15"
+                FontWeight="SemiBold"
+                Name="txtTitle"
+                Text="Wpisz wartość"
+                Margin="10,0,2,2"/>
+
+            <TextBlock 
+                FontStyle="Italic"
+                FontSize="12"
+                TextWrapping="Wrap"
+                Name="txtInfo"/>
+
+            <TextBox
+                Style="{StaticResource DarkTextBox}"
+                Height="30"
+                VerticalAlignment="Bottom"
+                Tag="@Wpisz wartość"
+                Name="txtResults"/>
+            
+            <Grid VerticalAlignment="Bottom"
+                  HorizontalAlignment="Stretch">
+                
+            <Button Height="20"
+                    Width="100"
+                    VerticalAlignment="Stretch"
+                    Margin="100,0,0,0"
+                    Content="Zatwierdź"
+                    Name="BtnSave"
+                    Click="BtnSave_Click"
+                    HorizontalAlignment="Left"> 
+                
+            </Button>
+            <Button Height="20"
+                    VerticalAlignment="Bottom"
+                    Width="100"
+                    Margin="0,0,100,0"
+                    Content="Anuluj"
+                    Name="BtnCancel"
+                    Click="BtnCancel_Click"
+                    HorizontalAlignment="Right">
+
+            </Button>
+            </Grid>
+        </StackPanel>
+    </Border>
+</Window>

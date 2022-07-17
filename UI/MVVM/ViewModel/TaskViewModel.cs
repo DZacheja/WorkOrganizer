@@ -33,23 +33,27 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             }
             return _instance;
         }
-
         /// <summary>
         /// Constructor
         /// </summary>
         private TaskViewModel() {
             addNewTaskVisible = Visibility.Collapsed;
-
+            FilterOnlyAvtiveTasks = true;
 
             if (ProgramSettings.TasksTable == null) {
                 dbContext = new WorkOrganizerContext();
                 var tsk = dbContext.Tasks.Include(a => a.Authors)
+                .Include(x=>x.ConfirmedPersonTask)
                 .Include(x => x.Component).ThenInclude(x => x.Works)
                 .Include(x => x.Component).ThenInclude(x => x.WorkTypes)
-                .Include(x => x.Subtaskas)
-                .OrderByDescending(o => o.Deadline).ToList();
+                .Include(x => x.Subtaskas).ThenInclude(x=>x.ConfirmedPersonSubtask)
+                .Where(x => x.Status == false)
+                .OrderByDescending(o => o.Deadline)
+                .ToList();
+
                 Tasks = new ObservableCollection<ToDoTask>();
                 foreach (var task in tsk) {
+                    task.Subtaskas = task.Subtaskas.OrderBy(x => x.Id).ToList();
                     Tasks.Add(task);
                 }
                 ProgramSettings.TasksTable = Tasks;
@@ -57,8 +61,10 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                 Tasks = ProgramSettings.TasksTable;
             }
 
-
+            NewSubtasksList = new ObservableCollection<string>();
         }
+
+
 
         #region add new Task
 
@@ -86,19 +92,43 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                         var ok = await dbContext.SaveChangesAsync();
 
                         if (ok > 0) {
+                            if (NewSubtasksList.Count > 0) {
+                                List<Subtask> NewSubtasks = new List<Subtask>();
+                                int max = await dbContext.Subtasks.MaxAsync(x => x.Id);
+                                max++;
+                                foreach (string s in NewSubtasksList) {
+                                    Subtask subtask = new Subtask() {
+                                        Id = max,
+                                        MainTaskID = newTask.ToDoTaskID,
+                                        Content = s
+                                    };
+                                    NewSubtasks.Add(subtask);
+                                    max++;
+                                }
+                                await dbContext.AddRangeAsync(NewSubtasks);
+                                if(await dbContext.SaveChangesAsync() == 0) {
+                                    dbContext.Tasks.Remove(newTask);
+                                    try {
+                                        await dbContext.SaveChangesAsync();
+                                        throw new Exception("Bład podczas dodwawania elementów zadania!");
+                                    } catch (Exception) {
+                                        throw new Exception("Bład podczas usuwania błednie dodanego zadania!");
+                                    }
+                                }
+                            }
+                                var tsk = await dbContext.Tasks.Include(a => a.Authors)
+                                            .Include(x => x.ConfirmedPersonTask)
+                                            .Include(x => x.Component).ThenInclude(x => x.Works)
+                                            .Include(x => x.Component).ThenInclude(x => x.WorkTypes)
+                                            .Include(x => x.Subtaskas).ThenInclude(x => x.ConfirmedPersonSubtask)
+                                    .FirstOrDefaultAsync(x => x.ToDoTaskID == newTask.ToDoTaskID);
+                                Tasks.Add(newTask);
+                                NewTaskText = "";
+                                NewSubtasksList.Clear();
+                            }
 
-                            var tsk = await dbContext.Tasks
-                                .Include(a => a.Authors)
-                                .Include(x => x.Component).ThenInclude(x => x.Works)
-                                .Include(x => x.Component).ThenInclude(x => x.WorkTypes)
-                                .Include(x => x.Subtaskas)
-                                .FirstOrDefaultAsync(x => x.ToDoTaskID == newTask.ToDoTaskID);
-                            Tasks.Add(newTask);
-                            NewTaskText = "";
                         }
-
-                    }
-                } catch (Exception) {
+                    } catch (Exception) {
                     throw new Exception("Błąd podczas dodawania zadania!");
                 }
             } else {
@@ -144,6 +174,64 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             }
         }
 
+
+        private string _newSubtaskText;
+
+        public string NewSubtaskTekst {
+            get { return _newSubtaskText; }
+            set {
+                _newSubtaskText = value;
+                OnPropertyChange();
+            }
+        }
+
+        private bool _addSubtaskClicked;
+
+        public bool AddSubtaskClicked {
+            get { return _addSubtaskClicked; }
+            set {
+                _addSubtaskClicked = value;
+                OnPropertyChange();
+                AddSubtaskClick();
+            }
+        }
+
+        public ObservableCollection<string> NewSubtasksList { get; set; }
+
+        public void AddSubtaskToList() {
+            if (NewSubtaskTekst != "") {
+                NewSubtasksList.Add(NewSubtaskTekst);
+                NewSubtaskTekst = "";
+            }
+        }
+        public async Task AddSubtaskClick() {
+            if (SelectedTask != null && NewSubtaskTekst != "") {
+                dbContext = new WorkOrganizerContext();
+                using (dbContext) {
+                    var mxST = dbContext.Subtasks.Max(x => x.Id);
+                    mxST++;
+                    Subtask s = new Subtask() {
+                        Id = mxST,
+                        MainTaskID = SelectedTask.ToDoTaskID,
+                        Content = NewSubtaskTekst
+                    };
+                    dbContext.Subtasks.Add(s);
+                    if (await dbContext.SaveChangesAsync() > 0) {
+                        SelectedTask.Subtaskas.Add(s);
+                        SelectedTask.Status = false;
+                        SelectedTask.Subtaskas = SelectedTask.Subtaskas;
+                        OnPropertyChange();
+                        var todotask = await dbContext.Tasks.FirstOrDefaultAsync(x => x.ToDoTaskID == SelectedTask.ToDoTaskID);
+                        if (todotask != null) {
+                            todotask.Status = false;
+                            await dbContext.SaveChangesAsync();
+                        }
+                    }
+                }
+                NewSubtaskTekst = "";
+            }
+        }
+
         #endregion
 
         #region Select and edit tasks
@@ -154,7 +242,6 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             get { return _filterOnlyAvtiveTasks; }
             set {
                 _filterOnlyAvtiveTasks = value;
-                System.Diagnostics.Debug.WriteLine(FilterOnlyAvtiveTasks);
                 OnPropertyChange();
             }
         }
@@ -188,6 +275,8 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                 OnPropertyChange();
             }
         }
+
+
 
         /// <summary>
         /// Selected task
@@ -227,11 +316,11 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             using (dbContext) {
                 Tasks.Clear();
 
-                var f = dbContext.Tasks
-                    .Include(a => a.Authors)
-                    .Include(x => x.Subtaskas)
-                    .Include(x => x.Component).ThenInclude(x => x.Works)
-                    .Include(x => x.Component).ThenInclude(x => x.WorkTypes);
+                var f = dbContext.Tasks.Include(a => a.Authors)
+                                .Include(x => x.ConfirmedPersonTask)
+                                .Include(x => x.Component).ThenInclude(x => x.Works)
+                                .Include(x => x.Component).ThenInclude(x => x.WorkTypes)
+                                .Include(x => x.Subtaskas).ThenInclude(x => x.ConfirmedPersonSubtask);
 
 
                 if (p.Name != "-") { //Filter by Principal
@@ -257,13 +346,15 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                     }
 
                     var res = x.OrderByDescending(o => o.Deadline).ToList();
+
                     foreach (var task in res) {
+                        task.Subtaskas = task.Subtaskas.OrderBy(x => x.Id).ToList();
                         Tasks.Add(task);
                     }
                 } else {
                     IQueryable<ToDoTask>? fs = null;
                     if (FilterOnlyAvtiveTasks && (FilterText != null && FilterText != "")) {
-                        fs = f.Where(o=> o.Status == false).Where(x => x.Content.Contains(FilterText));
+                        fs = f.Where(o => o.Status == false).Where(x => x.Content.Contains(FilterText));
                     } else if (FilterOnlyAvtiveTasks) {
                         fs = f.Where(o => o.Status == false);
                     } else if (FilterText != null && FilterText != "") {
@@ -277,31 +368,13 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                         res = f.OrderByDescending(o => o.Deadline).ToList();
 
                     foreach (var task in res) {
+                        task.Subtaskas = task.Subtaskas.OrderBy(x => x.Id).ToList();
                         Tasks.Add(task);
                     }
                 }
 
             }
 
-        }
-
-        /// <summary>
-        /// Chaange status of selected task on doubleclick
-        /// </summary>
-        public async void UpdateChange() {
-            if (selectedTask != null) {
-                dbContext = new WorkOrganizerContext();
-                if (selectedTask.Status == false) {
-                    using (dbContext) {
-                        var td = await dbContext.Tasks.FirstOrDefaultAsync(t => t.ToDoTaskID == selectedTask.ToDoTaskID);
-                        td.Status = true;
-                        //var x = Tasks.FirstOrDefault(t => t.ToDoTaskID == selectedTask.ToDoTaskID);
-                        //x.Status = true;
-                        selectedTask.Status = true;
-                        await dbContext.SaveChangesAsync();
-                    }
-                }
-            }
         }
         #endregion
     }

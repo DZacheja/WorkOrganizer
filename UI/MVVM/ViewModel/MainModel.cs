@@ -2,14 +2,19 @@
 using DatabaseConnection.Entities;
 using Microsoft.EntityFrameworkCore;
 using ModernDesign.Core;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
+using WorkOrganizer.DatabaseConnections.Entities;
 using WorkOrganizer.UI.Core;
+using WorkOrganizer.UI.MVVM.View;
 
 namespace WorkOrganizer.UI.MVVM.ViewModel {
     public class MainModel : ObservableObject {
@@ -32,6 +37,7 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
         public RelayCommand filterTaskView { get; set; }
         public RelayCommand newWorkCommand { get; set; }
         public RelayCommand settingsCommand { get; set; }
+        public RelayCommand saveFavoriteFilter { get; set; }
 
         public LoginPageModel loginPageMV { get; set; }
         public TaskViewModel taskMV { get; set; }
@@ -111,7 +117,26 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                     SelectedPrincipal = Principals[0];
             }
 
+            // ... Favorite Filters ... //
+            FavoriteFiltersList = new ObservableCollection<FavoriteFilter>();
+            try {
+                var elem = File.ReadAllText(ProgramSettings.FavoriteFiltersFile);
+                if (elem != null) {
+                    var ds = AesOperation.DecryptString(ProgramSettings.key, elem);
+                    List<FavoriteFilter> filter = JsonConvert.DeserializeObject<List<FavoriteFilter>>(ds);
+                    if (filter != null) {
+                        foreach (FavoriteFilter favoriteFilter in filter) {
+                            FavoriteFiltersList.Add(favoriteFilter);
+                        }
+                    }
+                }
+            } catch (Exception) { }
+
+            saveFavoriteFilter = new RelayCommand(prop => SaveFilter(), prop => true);
+
         }
+
+
         public void RefreshPrincipals() {
             dbContext = new WorkOrganizerContext();
             var dbList = dbContext.Principals.ToList();
@@ -215,6 +240,7 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
         /// Work Type Comboboxes Fill
         /// </summary>
         public ObservableCollection<WorkType> WorkTypes { get; set; }
+
         private WorkType? _selectedWorkType;
 
         public WorkType SelectedWorkType {
@@ -288,7 +314,56 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             }
         }
 
+        ///<summary>
+        ///Filters
+        /// </summary>
+        /// 
+        public ObservableCollection<FavoriteFilter> FavoriteFiltersList { get; set; }
+        private FavoriteFilter _selectedFavoriteFilter;
 
+        public FavoriteFilter SelectedFavoriteFilter {
+            get { return _selectedFavoriteFilter; }
+            set {
+                _selectedFavoriteFilter = value;
+                if (value != null) {
+                    taskMV.FilterText = SelectedFavoriteFilter.FavStringMatch;
+                    taskMV.FilterByWorkAndWorkType(
+                    wt: SelectedFavoriteFilter.FavWorkType,
+                    w: SelectedFavoriteFilter.FavWork,
+                    p: SelectedFavoriteFilter.FavPrincipal);
+                }
+                OnPropertyChange();
+            }
+        }
+
+        private void SaveFilter() {
+            InputBox ib = new InputBox("Wpisz nazwę filtra,Nowy filtr");
+            ib.ShowDialog();
+            if (ib.Results != null) {
+                FavoriteFilter fv = new FavoriteFilter() {
+                    FavPrincipal = new Principal() { PrincipalID = SelectedPrincipal.PrincipalID,Name = SelectedPrincipal.Name },
+                    FavWork = new Work() { WorkId = SelectedPrincipalWork.WorkId, Name =SelectedPrincipalWork.Name },
+                    FavWorkType = new WorkType() { Id = SelectedWorkType.Id , Name = SelectedWorkType.Name },
+                    FavStringMatch = taskMV.FilterText,
+                    FilterName = ib.Results
+                };
+                FavoriteFiltersList.Add(fv);
+                var s = JsonConvert.SerializeObject(FavoriteFiltersList);
+                var es = AesOperation.EncryptString(ProgramSettings.key, s);
+                File.WriteAllText(ProgramSettings.FavoriteFiltersFile, es);
+            }
+
+        }
+
+        public void RemoveFilter() {
+            if (SelectedFavoriteFilter != null) {
+                FavoriteFiltersList.Remove(SelectedFavoriteFilter);
+                var s = JsonConvert.SerializeObject(FavoriteFiltersList);
+                var es = AesOperation.EncryptString(ProgramSettings.key, s);
+                File.WriteAllText(ProgramSettings.FavoriteFiltersFile, es);
+            }
+
+        }
         /// <summary>
         /// LBL info
         /// </summary>
@@ -334,6 +409,7 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
                 lblInfoVisibility = System.Windows.Visibility.Collapsed;
             });
         }
+
 
 
     }

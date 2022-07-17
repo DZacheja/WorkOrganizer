@@ -9,9 +9,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="UI/Theme/MenuButtonTheme.xaml"/>
-                <ResourceDictionary Source="UI/Theme/LoginViewTextBox.xaml"/>
+                <ResourceDictionary Source="UI/Theme/LightTextBox.xaml"/>
                 <ResourceDictionary Source="UI/Theme/TaskCardElement.xaml"/>
-                <ResourceDictionary Source="UI/Theme/NewTaskTextBox.xaml"/>
+                <ResourceDictionary Source="UI/Theme/DarkTextBox.xaml"/>
                 <ResourceDictionary Source="UI/Theme/StyledScrollBar.xaml"/>
                 <ResourceDictionary Source="UI/Theme/stylizedComboBox.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/ColorPicker;component/Styles/DefaultColorPickerStyle.xaml" />

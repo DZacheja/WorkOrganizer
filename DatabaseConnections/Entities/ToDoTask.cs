@@ -8,11 +8,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using WorkOrganizer.UI.Core;
 using WorkOrganizer.UI.MVVM.ViewModel;
 
 namespace DatabaseConnection.Entities {
     public class ToDoTask : INotifyPropertyChanged {
-        private bool? status;
+        private bool _status;
         // Declare the event
         public event PropertyChangedEventHandler PropertyChanged;
         [Key]
@@ -22,23 +23,32 @@ namespace DatabaseConnection.Entities {
         public string Content { get; set; }
 
         public DateTime Deadline { get; set; }
-        public bool? Status {
-            get { return status; }
+        public bool Status {
+            get { return _status; }
             set {
-                status = value;
+                _status = value;
                 // Call OnPropertyChanged whenever the property is updated
-                OnPropertyChanged();
-                new Task(async () => {
-                    await UpdateStatus();
-                }).Start();
+                if (Update) {
+                    OnPropertyChanged();
+                    new Task(async () => {
+                        await UpdateStatus();
+                    }).Start();
+                }
 
             }
         }
+
+        [NotMapped]
+        public bool Update = true;
+
         public WorkComponent Component { get; set; }
         public int ComponentsId { get; set; }
 
         public User Authors { get; set; }
-        public int AuthorsID { get; set; }
+        public int? AuthorsID { get; set; }
+
+        public User? ConfirmedPersonTask { get; set; }
+        public int? ConfirmedPersonTaskID { get; set; }
 
         protected void OnPropertyChanged([CallerMemberName] string name = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -62,7 +72,19 @@ namespace DatabaseConnection.Entities {
                     using (context) {
                         var thisObject = context.Tasks.FirstOrDefault(x => x.ToDoTaskID == this.ToDoTaskID);
                         if (thisObject != null) {
-                            thisObject.Status = this.status;
+                            thisObject.Update = false;
+                            thisObject.Status = this.Status;
+                            if(this.Status == true && ProgramSettings.currentUser != null && ProgramSettings.currentUser.UserID != null) {
+                                this.ConfirmedPersonTask = ProgramSettings.currentUser;
+
+                                thisObject.ConfirmedPersonTaskID = ProgramSettings.currentUser.UserID;
+                                this.ConfirmedPersonTaskID = ProgramSettings.currentUser.UserID;
+                            } else {
+                                this.ConfirmedPersonTask = null;
+
+                                thisObject.ConfirmedPersonTaskID = null;
+                                this.ConfirmedPersonTaskID = null;
+                            }
                             await context.SaveChangesAsync();
                         }
                     }

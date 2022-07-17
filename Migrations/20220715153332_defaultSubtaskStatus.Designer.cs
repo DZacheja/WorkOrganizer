@@ -3,6 +3,7 @@ using System;
 using DatabaseConnection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace WorkOrganizer.Migrations
 {
     [DbContext(typeof(WorkOrganizerContext))]
-    partial class WorkOrganizerContextModelSnapshot : ModelSnapshot
+    [Migration("20220715153332_defaultSubtaskStatus")]
+    partial class defaultSubtaskStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,9 +81,6 @@ namespace WorkOrganizer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ConfirmedPersonSubtaskID")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("text");
@@ -96,8 +95,6 @@ namespace WorkOrganizer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ConfirmedPersonSubtaskID");
-
                     b.HasIndex("MainTaskID");
 
                     b.ToTable("Subtasks");
@@ -111,14 +108,10 @@ namespace WorkOrganizer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ToDoTaskID"));
 
-                    b.Property<int?>("AuthorsID")
-                        .IsRequired()
+                    b.Property<int>("AuthorsID")
                         .HasColumnType("integer");
 
                     b.Property<int>("ComponentsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("ConfirmedPersonTaskID")
                         .HasColumnType("integer");
 
                     b.Property<string>("Content")
@@ -138,8 +131,6 @@ namespace WorkOrganizer.Migrations
                     b.HasIndex("AuthorsID");
 
                     b.HasIndex("ComponentsId");
-
-                    b.HasIndex("ConfirmedPersonTaskID");
 
                     b.ToTable("Tasks");
                 });
@@ -268,17 +259,11 @@ namespace WorkOrganizer.Migrations
 
             modelBuilder.Entity("DatabaseConnection.Entities.Subtask", b =>
                 {
-                    b.HasOne("DatabaseConnection.Entities.User", "ConfirmedPersonSubtask")
-                        .WithMany("ConfirmedSubTasks")
-                        .HasForeignKey("ConfirmedPersonSubtaskID");
-
                     b.HasOne("DatabaseConnection.Entities.ToDoTask", "MainTask")
                         .WithMany("Subtaskas")
                         .HasForeignKey("MainTaskID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ConfirmedPersonSubtask");
 
                     b.Navigation("MainTask");
                 });
@@ -297,15 +282,9 @@ namespace WorkOrganizer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DatabaseConnection.Entities.User", "ConfirmedPersonTask")
-                        .WithMany("ConfirmedTasks")
-                        .HasForeignKey("ConfirmedPersonTaskID");
-
                     b.Navigation("Authors");
 
                     b.Navigation("Component");
-
-                    b.Navigation("ConfirmedPersonTask");
                 });
 
             modelBuilder.Entity("DatabaseConnection.Entities.Work", b =>
@@ -350,10 +329,6 @@ namespace WorkOrganizer.Migrations
 
             modelBuilder.Entity("DatabaseConnection.Entities.User", b =>
                 {
-                    b.Navigation("ConfirmedSubTasks");
-
-                    b.Navigation("ConfirmedTasks");
-
                     b.Navigation("Messages");
 
                     b.Navigation("ToDoTasks");

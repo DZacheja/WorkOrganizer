@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using System.Windows;
@@ -37,10 +38,6 @@ namespace WorkOrganizer.UI.MVVM.View {
         }
 
 
-        private void tasksList_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
-            viewModel.UpdateChange();
-        }
-
         private async void AddNewTask_Click(object sender, RoutedEventArgs e) {
             try {
                 await viewModel.InsertingNewTask(dateNewTaskDeadline.SelectedDate);
@@ -48,6 +45,10 @@ namespace WorkOrganizer.UI.MVVM.View {
             } catch (Exception ex) {
                 await showLblInfo(ex.Message, "#DC143C");
             }
+        }
+
+        private void AddNewSubtask(object sender, RoutedEventArgs e) {
+            viewModel.AddSubtaskToList();
         }
 
         private async Task showLblInfo(string txt, string color) {
@@ -64,5 +65,30 @@ namespace WorkOrganizer.UI.MVVM.View {
 
         }
 
+        private void tasksList_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+            while ((dep != null) && !(dep is ListBoxItem)) {
+                dep = VisualTreeHelper.GetParent(dep);
+            }
+
+            if (dep == null)
+                return;
+
+            ListBoxItem item = (ListBoxItem)dep;
+
+            if (item.IsSelected) {
+                item.IsSelected = !item.IsSelected;
+                e.Handled = true;
+            }
+        }
+
+        private void ListSubitems_KeyDown(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Delete) {
+                if(ListSubitems.SelectedItems.Count > 0) {
+                    var s = ListSubitems.SelectedItem;
+                        ((ObservableCollection<string>)ListSubitems.ItemsSource).Remove((string)s);
+                }
+            }
+        }
     }
 }

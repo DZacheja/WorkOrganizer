@@ -46,7 +46,7 @@ namespace DatabaseConnection {
             });
 
             //ToDoTask table
-            modelBuilder.Entity<ToDoTask>(e => { 
+            modelBuilder.Entity<ToDoTask>(e => {
                 e.Property(x => x.Status).HasDefaultValue(false);
 
                 e.HasMany(x => x.Subtaskas)
@@ -54,6 +54,8 @@ namespace DatabaseConnection {
                 .HasForeignKey(x => x.MainTaskID);
 
                 e.Property(x => x.ToDoTaskID).ValueGeneratedOnAdd();
+                //e.HasOne(x => x.ConfirmedPersonTask).WithMany(x => x.ConfirmedTasks).HasForeignKey(x=>x.ConfirmedPersonTaskID);
+
             });
 
             //Works tabel
@@ -95,11 +97,14 @@ namespace DatabaseConnection {
 
             modelBuilder.Entity<WorkComponent>().Property(x => x.ComponentId).ValueGeneratedOnAdd();
             modelBuilder.Entity<WorkType>().Property(x => x.Id).ValueGeneratedOnAdd();
-            modelBuilder.Entity<Subtask>().Property(x => x.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Subtask>(s => {
+                s.Property(x => x.Id).ValueGeneratedOnAdd();
+                s.Property(x => x.Status).HasDefaultValue(false);
+                //s.HasOne(x => x.ConfirmedPersonSubtask).WithMany();
+            });
+
+
+
         }
-
-
-
-
     }
 }

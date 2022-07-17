@@ -20,23 +20,27 @@
                                 HorizontalAlignment="Stretch">
                         <Grid >
                             <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition />
-                                <ColumnDefinition />
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
+                            <!-- Autor wiersz 0   -->
                             <TextBlock Grid.Row="0"
                                        Grid.ColumnSpan="2"
                             Text="{Binding Authors.Name}"
                                        FontWeight="Bold"
                                        FontSize="15"
                                        Foreground="#F2D6BD"/>
+
+                            <!-- Nazwa roboty wiersz 1 kolumna 0-->
                             <TextBlock Grid.Row="1"
                                        Grid.Column="0"
                                        FontSize="10"
@@ -46,6 +50,7 @@
                                        Foreground="White"
                                        Text="{Binding Component.Works.Name, StringFormat='Robota: {0}'}"/>
 
+                            <!-- Typ roboty wiersz 1 kolumna 1-->
                             <TextBlock Grid.Row="1"
                                        Grid.Column="1"
                                        FontSize="10"
@@ -54,6 +59,7 @@
                                        Text="{Binding Component.WorkTypes.Name, StringFormat='Rodzaj: {0:dd-MM-yyyy}'}"
                                        Foreground="White"/>
 
+                            <!-- Deadline roboty wiersz 1 kolumna 2-->
                             <TextBlock Grid.Row="1"
                                        Grid.Column="2"
                                        FontSize="10"
@@ -61,6 +67,8 @@
                                        Margin="5,0,0,0"
                                        Text="{Binding Deadline, StringFormat='Termin: {0:dd-MM-yyyy}'}"
                                        Foreground="White"/>
+
+                            <!-- Status zadania wiersz 2 kolumna 0-->
                             <CheckBox Grid.Row="2"
                                       Margin="0"
                                       VerticalAlignment="Center"
@@ -69,6 +77,8 @@
                                       Visibility="{Binding Subtaskas, Converter={StaticResource anySubitems}}"
                                       Name="mainChk">
                             </CheckBox>
+
+                            <!-- Główna treść zadania wiersz 2 kolumna 1-3 -->
                             <Border Grid.Row="2"
                                     Grid.Column="0"
                                     Grid.ColumnSpan="3"
@@ -77,19 +87,19 @@
                                     BorderThickness="1"
                                     BorderBrush="#F2D6BD"
                                     Margin="25,5,0,0"
-                                    Name="brd"                                    
-                                    VerticalAlignment="Stretch">
-                                <StackPanel Orientation="Horizontal"
-                                            HorizontalAlignment="Stretch">
-                                    <TextBlock VerticalAlignment="Center"
-                                           Margin="10,5,10,5"
+                                    Name="brd"
+                                    MaxWidth="600">
+                                <StackPanel>
+                                    <TextBlock Margin="10,5,10,5"
                                            FontSize="15"
                                            TextWrapping="Wrap"
                                            Text="{Binding Content}"
                                            Foreground="White"/>
                                 </StackPanel>
                             </Border>
-                            <CheckBox Grid.Column="4"
+
+                            <!-- Rozwijanie podzadań  wiersz 2 kolumna 1-4 -->
+                            <CheckBox Grid.Column="3"
                                     Grid.Row="2"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Right"
@@ -106,11 +116,10 @@
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="{x:Type CheckBox}">
                                                     <Border Background="{TemplateBinding Background}"
-                                                CornerRadius="10">
-                                                        <fa:ImageAwesome 
-                                                Icon="CaretDown"
-                                                Foreground="{TemplateBinding Foreground}"
-                                                Margin="5"/>
+                                                    CornerRadius="10">
+                                                        <fa:ImageAwesome Icon="CaretDown"
+                                                        Foreground="{TemplateBinding Foreground}"
+                                                        Margin="5"/>
                                                     </Border>
                                                 </ControlTemplate>
                                             </Setter.Value>
@@ -130,45 +139,120 @@
                                 </CheckBox.Style>
                             </CheckBox>
 
-                            <ListView Background="Transparent"
-                                      Grid.Row="4"
-                                      Grid.Column="0"
+                            <!-- Dodawanie podzadań  wiersz 3 kolumna 1-* -->
+                            <StackPanel Grid.Row="3"
+                                    Grid.ColumnSpan="4"
+                                    Visibility="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType=ListViewItem},Converter={StaticResource btv}}"
+                                    Orientation="Horizontal">
+
+                                <CheckBox 
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    Height="20"
+                                    Width="20"
+                                    Margin="10,0,0,0"
+                                    IsChecked="{Binding Path=DataContext.AddSubtaskClicked,
+                                                    RelativeSource={RelativeSource AncestorType=UserControl},
+                                                    Mode=OneWayToSource}">
+                                    <CheckBox.Style>
+                                        <Style TargetType="{x:Type CheckBox}">
+                                            <Setter Property="Background" Value="#8C8577"/>
+                                            <Setter Property="Foreground" Value="#142426"/>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                                                        <Border Background="{TemplateBinding Background}" CornerRadius="10">
+                                                            <fa:ImageAwesome Icon="Plus" Foreground="{TemplateBinding Foreground}" Margin="5"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Button.Background" Value="#142426"/>
+                                                    <Setter Property="Button.Foreground" Value="#8C8577"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+
+                                        </Style>
+                                    </CheckBox.Style>
+                                </CheckBox>
+
+                                <TextBox VerticalAlignment="Stretch"
+                                             HorizontalAlignment="Stretch"
+                                             Style="{StaticResource LightTextBox}"
+                                             FontSize="15"
+                                             Margin="5"
+                                             Height="25"
+                                             Tag="@Dodaj nowe podzadanie"
+                                             Text="{Binding Path=DataContext.NewSubtaskTekst,
+                                                    RelativeSource={RelativeSource AncestorType=UserControl},
+                                                    Mode=Default}"
+                                             MinWidth="300">
+                                </TextBox>
+                            </StackPanel>
+
+                            <!-- Podzadania podzadań  wiersz 4 kolumna 1-* -->
+
+                            <StackPanel Grid.Row="4"
+                                        Grid.ColumnSpan="4">
+
+                                <ListView Background="Transparent"
                                       Margin="40,0,0,0"
-                                      Grid.ColumnSpan="4"
+                                      Grid.ColumnSpan="5"
                                       ItemsSource="{Binding Subtaskas, Converter={StaticResource lstConvert}}"
                                       VerticalAlignment="Stretch"
                                       Visibility="{Binding IsChecked, ElementName=chkSubtasks,Converter={StaticResource btv}}"
                                       SelectedItem="{Binding Path=DataContext.SelectedSubTask,
                                                     RelativeSource={RelativeSource AncestorType=UserControl},
                                                     Mode=Default}">
-                                <ListView.ItemContainerStyle>
-                                    <Style TargetType="ListViewItem">
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate>
-                                                    <Border BorderBrush="#F2D6BD"
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate>
+
+                                                        <Border BorderBrush="#F2D6BD"
                                                             BorderThickness="0.5"
                                                             CornerRadius="3"
                                                             Margin="3">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <CheckBox IsChecked="{Binding Path=Status}">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <CheckBox IsChecked="{Binding Path=Status}" Name="subChk">
 
-                                                            </CheckBox>
-                                                            <TextBlock Margin="10,0,0,0"
-                                                                Text="{Binding Path=Content}"
+                                                                    </CheckBox>
+                                                                    <TextBlock Margin="10,0,0,0"
+                                                                       Text="{Binding Path=Content}"
                                                                        Foreground="White"
                                                                        FontSize="15">
+                                                                        <TextBlock.ToolTip>
+                                                                            <ToolTip Content="{Binding Path=ConfirmedPersonSubtask.Name}"
+                                                                                     ContentStringFormat="{}Odznaczył: {0}"/>
+                                                                            <!--  
+                                                                            <TextBlock Foreground="Green">
+                                                                                <TextBlock.Text>
+                                                                                    <Binding Path="ConfirmedPersonSubtask.Name" StringFormat="Wykonał: {0}}"/>
+                                                                                </TextBlock.Text>
+                                                                            </TextBlock>
+                                                                            -->
+                                                                        </TextBlock.ToolTip>
+                                                                    </TextBlock>
 
-                                                            </TextBlock>
+                                                                </StackPanel>
+                                                            </StackPanel>
+                                                        </Border>
 
-                                                        </StackPanel>
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </ListView.ItemContainerStyle>
-                            </ListView>
+
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                </ListView>
+
+                            </StackPanel>
                         </Grid>
                         <StackPanel.Style>
                             <Style>
