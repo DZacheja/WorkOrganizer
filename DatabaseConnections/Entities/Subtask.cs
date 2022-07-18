@@ -76,7 +76,7 @@ namespace DatabaseConnection.Entities {
                                 this.ConfirmedPersonSubtaskID = null;
                             }
                             await context.SaveChangesAsync();
-                            var el = await context.Subtasks.FirstOrDefaultAsync(x => x.Status == false);
+                            var el = await context.Subtasks.FirstOrDefaultAsync(x => x.Status == false && x.MainTaskID == this.MainTaskID);
                             if (el == null) {
                                 TaskViewModel tMV = TaskViewModel.GetInstance();
                                 var mainTask = tMV.Tasks.FirstOrDefault(x => x.ToDoTaskID == this.MainTaskID);

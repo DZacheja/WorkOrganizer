@@ -341,12 +341,19 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             ib.ShowDialog();
             if (ib.Results != null) {
                 FavoriteFilter fv = new FavoriteFilter() {
-                    FavPrincipal = new Principal() { PrincipalID = SelectedPrincipal.PrincipalID,Name = SelectedPrincipal.Name },
-                    FavWork = new Work() { WorkId = SelectedPrincipalWork.WorkId, Name =SelectedPrincipalWork.Name },
-                    FavWorkType = new WorkType() { Id = SelectedWorkType.Id , Name = SelectedWorkType.Name },
                     FavStringMatch = taskMV.FilterText,
                     FilterName = ib.Results
                 };
+
+                if(SelectedPrincipal != null) 
+                    fv.FavPrincipal = new Principal() { PrincipalID = SelectedPrincipal.PrincipalID, Name = SelectedPrincipal.Name };
+
+                if (SelectedPrincipalWork != null)
+                    fv.FavWork = new Work() { WorkId = SelectedPrincipalWork.WorkId, Name = SelectedPrincipalWork.Name };
+
+                if (SelectedWorkType != null)
+                    fv.FavWorkType = new WorkType() { Id = SelectedWorkType.Id, Name = SelectedWorkType.Name };
+                
                 FavoriteFiltersList.Add(fv);
                 var s = JsonConvert.SerializeObject(FavoriteFiltersList);
                 var es = AesOperation.EncryptString(ProgramSettings.key, s);

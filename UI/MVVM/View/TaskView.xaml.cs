@@ -19,9 +19,11 @@ namespace WorkOrganizer.UI.MVVM.View {
             this.DataContext = viewModel;
             InitializeComponent();
             ((INotifyCollectionChanged)tasksList.Items).CollectionChanged += ListView_CollectionChanged;
-            var index = tasksList.Items.Count - 1;
-            var item = tasksList.Items.GetItemAt(index);
-            tasksList.ScrollIntoView(item);
+            if (tasksList.Items.Count > 0) {
+                var index = tasksList.Items.Count - 1;
+                var item = tasksList.Items.GetItemAt(index);
+                tasksList.ScrollIntoView(item);
+            }
         }
         private void ListView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
             if (e.Action == NotifyCollectionChangedAction.Add) {
@@ -84,9 +86,9 @@ namespace WorkOrganizer.UI.MVVM.View {
 
         private void ListSubitems_KeyDown(object sender, KeyEventArgs e) {
             if (e.Key == Key.Delete) {
-                if(ListSubitems.SelectedItems.Count > 0) {
+                if (ListSubitems.SelectedItems.Count > 0) {
                     var s = ListSubitems.SelectedItem;
-                        ((ObservableCollection<string>)ListSubitems.ItemsSource).Remove((string)s);
+                    ((ObservableCollection<string>)ListSubitems.ItemsSource).Remove((string)s);
                 }
             }
         }

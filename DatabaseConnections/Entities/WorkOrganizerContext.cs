@@ -20,7 +20,8 @@ namespace DatabaseConnection {
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             //optionsBuilder.UseNpgsql(@"Server=localhost;Database=DatabaseWorkOrganizerDb;Port=5432;User Id=postgres;Password=admin");
-            optionsBuilder.UseNpgsql(@"Server=127.0.0.1;Database=DatabaseWorkOrganizerDb;Port=5432;User Id=postgres;Password=admin");
+            //optionsBuilder.UseNpgsql(@"Server=192.168.1.34;Database=DatabaseWorkOrganizerDb;Port=5432;User Id=postgres;Password=admin");
+            optionsBuilder.UseNpgsql(@"Server=127.0.0.1;Database=DatabaseWorkOrganizerDb;Port=5432;User Id=user;Password=user");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             //Users table
