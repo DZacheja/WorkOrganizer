@@ -69,6 +69,6 @@ Każda robota ma swój indywidualny kolor co ułatwia przeglądanie zadań.
 <b>Damian Zacheja</b>
 
 ## Licencja
-![Licencja]()
+![Apache-2.0 license](https://github.com/DZacheja/WorkOrganizer/blob/master/License)
 
 
