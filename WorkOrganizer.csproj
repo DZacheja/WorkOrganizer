@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Logo.ico" />
+    <None Remove="UI\Icons\Logo.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,19 +42,20 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-	  <Folder Include="UI\Icons" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="logo_BGP.png" />
+    <Resource Include="UI\Icons\Logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
     <None Update="LoggedUser.txt">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="UI\Icons\logo_BGP.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="Logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

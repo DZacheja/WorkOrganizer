@@ -31,7 +31,7 @@
                 CornerRadius="10,10,0,0">
                 <!-- Upper Menu bar -->
                 <Grid HorizontalAlignment="Stretch">
-                    <Label Content="BG-P Organizer"
+                    <Label Content="Work Organizer"
                        Foreground="#2E5159"
                        FontWeight="Bold"/>
                     <StackPanel HorizontalAlignment="Right"
@@ -79,7 +79,7 @@
                     </Grid.RowDefinitions>
                     <!-- Logo -->
                     <StackPanel Grid.Row="0"
-                    Background="White">
+                    Background="#D9BEA7">
                         <Border
                         CornerRadius="30"
                         BorderThickness="2"
@@ -88,7 +88,7 @@
                            HorizontalAlignment="Stretch"
                            RenderOptions.BitmapScalingMode="HighQuality"
                            Margin="10,10,10,10"
-                           Source="logo_BGP.png"/>
+                           Source="pack://application:,,,/UI/Icons/Logo.png"/>
                         </Border>
                         <Label Content="MENU"
                                FontSize="24"
