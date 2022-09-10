@@ -94,6 +94,8 @@ namespace DatabaseConnection.Entities {
                 await m.showLblInfo("Błąd podczas aktualizacji!", "#00cc00");
             }
 
+
+
         }
 
     }

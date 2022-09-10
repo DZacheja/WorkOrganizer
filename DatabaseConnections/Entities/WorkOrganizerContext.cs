@@ -1,7 +1,10 @@
 ﻿using DatabaseConnection.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +12,7 @@ using System.Threading.Tasks;
 namespace DatabaseConnection {
     public class WorkOrganizerContext : DbContext {
 
+        private static StreamWriter _logStream = null;
         public DbSet<Work> Works { get; set; }
         public DbSet<Principal> Principals { get; set; }
         public DbSet<Message> Messages { get; set; }
@@ -22,6 +26,11 @@ namespace DatabaseConnection {
             //optionsBuilder.UseNpgsql(@"Server=localhost;Database=DatabaseWorkOrganizerDb;Port=5432;User Id=postgres;Password=admin");
             //optionsBuilder.UseNpgsql(@"Server=192.168.1.34;Database=DatabaseWorkOrganizerDb;Port=5432;User Id=postgres;Password=admin");
             optionsBuilder.UseNpgsql(@"Server=127.0.0.1;Database=DatabaseWorkOrganizerDb;Port=5432;User Id=user;Password=user");
+            if(_logStream == null) {
+                _logStream = new StreamWriter("mylog.txt", append: true);
+            }
+            //optionsBuilder.LogTo(_logStream.WriteLine,LogLevel.Debug);
+            optionsBuilder.LogTo(_logStream.WriteLine, new[] { DbLoggerCategory.Database.Command.Name});
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             //Users table
@@ -104,8 +113,7 @@ namespace DatabaseConnection {
                 //s.HasOne(x => x.ConfirmedPersonSubtask).WithMany();
             });
 
-
-
         }
+
     }
 }

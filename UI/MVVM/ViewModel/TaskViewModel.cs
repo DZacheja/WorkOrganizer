@@ -62,6 +62,10 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
             }
 
             NewSubtasksList = new ObservableCollection<string>();
+
+            editSelectedTask = new RelayCommand(o => {
+                System.Diagnostics.Debug.WriteLine("działa -- - adsa asd- sad !");
+            });
         }
 
 
@@ -235,6 +239,9 @@ namespace WorkOrganizer.UI.MVVM.ViewModel {
         #endregion
 
         #region Select and edit tasks
+
+        public RelayCommand editSelectedTask { get; set; }
+
 
         private bool _filterOnlyAvtiveTasks;
 

@@ -19,7 +19,7 @@
                                 x:Name="ElementContentPanel"
                                 HorizontalAlignment="Stretch">
                         <Grid >
-                            
+
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
@@ -27,14 +27,14 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            
+
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
-                            
+
                             <!-- Autor wiersz 0   -->
                             <TextBlock Grid.Row="0"
                                        Grid.ColumnSpan="2"
@@ -183,7 +183,7 @@
                                                     <Setter Property="Button.Foreground" Value="#8C8577"/>
                                                 </Trigger>
                                             </Style.Triggers>
-                                            
+
                                         </Style>
                                     </CheckBox.Style>
                                 </CheckBox>
@@ -262,6 +262,13 @@
                         </StackPanel.Style>
                     </StackPanel>
                 </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ContextMenu">
+            <Setter.Value>
+                <ContextMenu>
+                    <MenuItem Header="test1"/>
+                </ContextMenu>
             </Setter.Value>
         </Setter>
         <Style.Triggers>
