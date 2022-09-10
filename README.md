@@ -46,11 +46,11 @@ Po zalogowaniu, dane do logowania są zapisywanie w folderze programu w pliku tx
 </p>
 
 ### Przeglądanie zadań
-Po wybraniu zakładki zadania wyświetlają się wszystkie aktywne zadania ze wszystkich robót, posortowane terminem realizacji.<br>
+Po wybraniu zakładki <b><i>zadania</i></b> wyświetlają się wszystkie aktywne zadania ze wszystkich robót, posortowane terminem realizacji.<br>
 Po prawej stronie ekranu mamy możliwość filtracji wyświetlanych zadań.<br>
 Zadania nieaktywne są wygaszone względem aktywnych, po najechaniu na zadanie mamy informacje, który użytkownik odznaczył dany element.<br>
-Dodawanie nowego zadania odbywa się po kliknięciu na kręcący się kalendarz. Aby poprawnie dodać nowy element należy wcześniej w miejscu filtrowania wybrać odpowiedniego zleceniodawcę, robotę i rodzaj.<br>
-Istnieje możliwość zapisania wybranego filtru do listy ulubionych filtrów. Można filtrować po wszystkich elementach oraz treści a schemat listy jest zapisany w pliku txt również zaszyfrowanym kluczem symetrycznym
+Dodawanie nowego zadania odbywa się po kliknięciu na kręcący się kalendarz. Aby poprawnie dodać nowy element, należy wcześniej w miejscu filtrowania wybrać odpowiedniego zleceniodawcę, robotę i rodzaj.<br>
+Istnieje możliwość zapisania wybranego filtru do listy ulubionych filtrów. Można filtrować po wszystkich elementach oraz treści, a schemat listy jest zapisany w pliku txt również zaszyfrowanym kluczem symetrycznym
 
 <p align=left>
 <img src ="https://user-images.githubusercontent.com/72301310/189498587-1af862cf-dc39-40f1-94dc-5b1f5c25010f.png" Width=600>
@@ -58,9 +58,9 @@ Istnieje możliwość zapisania wybranego filtru do listy ulubionych filtrów. M
 </p>
 
 ### Dodawanie nowego zadania
-W oknie dodawania nowego zadania mamy możliwość definicji zarówno nowego zleceniodawcy, roboty jak i wszystkich jej elementów. <br>
+W oknie dodawania nowego zadania mamy możliwość definicji zarówno nowego zleceniodawcy, roboty, jak i wszystkich jej elementów. <br>
 Ze względu na wykorzytywanie tego programu w firmie, której każde zlecenia składa się z tych samych elementów ich wybór następuje w liście gotowych elementów. <br>
-Każda robota ma swój indywidualny kolor co ułatwia przeglądanie zadań.
+Każda robota ma swój indywidualny kolor, co ułatwia przeglądanie zadań.
 <p align=left>
 <img src ="https://user-images.githubusercontent.com/72301310/189498770-3d4d4f63-0324-4689-afc2-dc2e48376386.png" Width=600>
 </p>
